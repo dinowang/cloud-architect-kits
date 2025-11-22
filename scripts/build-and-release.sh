@@ -56,7 +56,7 @@ echo ""
 
 # Step 3: Build the plugin
 echo "==> Step 3: Building Figma plugin..."
-npm run build
+(cd $SRC_DIR && npm run build)
 echo ""
 
 # Step 4: Prepare distribution

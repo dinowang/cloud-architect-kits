@@ -5,7 +5,7 @@
     "lib": [
       "ES2017"
     ],
-    "outDir": "../../dist/",
+    "outDir": "./",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,

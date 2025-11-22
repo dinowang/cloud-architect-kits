@@ -7,9 +7,11 @@ figma.ui.onmessage = async (msg) => {
             const node = figma.createNodeFromSvg(svgData);
             // Resize to specified size
             node.resize(size, size);
+            node.expanded = false;
             // Create a group and name it
             const group = figma.group([node], figma.currentPage);
             group.name = name;
+            group.expanded = false;
             // Add to current page (already done by group)
             // figma.currentPage.appendChild(group);
             // Center in viewport
