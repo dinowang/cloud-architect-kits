@@ -1,0 +1,22 @@
+{
+  "name": "figma-cloudarchitect",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build": "node process-icons.js && node build.js && npx tsc -p tsconfig.json",
+    "watch": "npx tsc -p tsconfig.json --watch",
+    "verify": "node verify-icons.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.121.0",
+    "typescript": "^5.9.3"
+  }
+}
