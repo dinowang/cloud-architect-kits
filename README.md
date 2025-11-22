@@ -64,7 +64,9 @@ The plugin build process:
 
 ### Automated Build (GitHub Actions)
 
-The repository includes a GitHub Actions workflow for manual builds:
+The repository includes a GitHub Actions workflow for manual builds with two stages:
+
+**Build Stage:**
 - Downloads all icon sources
 - Builds the plugin
 - Creates distribution packages
@@ -72,9 +74,14 @@ The repository includes a GitHub Actions workflow for manual builds:
 - Commits to timestamped CI branch (format: `YYYYMMDDHHmm-ci`) only if changes detected
 - Uploads build artifacts (retained for 30 days) only if changes detected
 
+**Release Stage** (only if changes detected):
+- Downloads build artifact
+- Creates `dist.zip` archive
+- **Creates GitHub Release** (format: `vYYYYMMDDHHmm`) with `dist.zip`
+
 Trigger: Go to Actions → Build and Release → Run workflow
 
-**Note**: If no changes are detected in `./dist/`, the workflow will skip creating the CI branch and uploading artifacts.
+**Note**: If no changes are detected in `./dist/`, the workflow will skip creating the CI branch, uploading artifacts, and the entire release stage.
 
 **Permissions**: The workflow requires `contents: write` permission to create branches and push changes. This is configured in the workflow file. For more details, see [docs/20251122-11-GITHUB-ACTIONS-PERMISSIONS.md](docs/20251122-11-GITHUB-ACTIONS-PERMISSIONS.md).
 

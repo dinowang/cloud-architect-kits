@@ -45,6 +45,8 @@
 - 僅手動觸發（workflow_dispatch）
 
 **建置步驟**：
+
+**Build Job:**
 1. Checkout 程式碼
 2. 建立時間戳記 CI 分支（格式：`YYYYMMDDHHmm-ci`）
 3. 設定 Node.js 環境（v20）
@@ -56,12 +58,19 @@
 9. 若有變更：提交至 CI 分支並上傳產物（保留 30 天）
 10. 若無變更：跳過提交與上傳
 
+**Release Job**（僅在有變更時執行）：
+1. 下載 Build Job 的 Artifact
+2. 建立 ZIP 壓縮檔
+3. 產生 GitHub Release（tag: `vYYYYMMDDHHmm`）
+
 **功能特色**：
 - 使用 NPM cache 加速建置
 - 自動建立獨立的 CI 分支
 - 時間戳記命名便於追蹤
 - **智慧差異偵測**：自動比對與前一版的變更
 - 僅在有變更時才建立 CI 分支與上傳產物
+- **分離式 Release 階段**：Build 與 Release 獨立執行
+- **自動發布 Release**：包含 `dist.zip` 供直接下載使用
 
 ### 3. 新增下載腳本
 
@@ -139,6 +148,8 @@ figma-cloudarchitect/
 4. 點選 "Run workflow"
 
 **工作流程**：
+
+**Build Job:**
 1. 建立時間戳記分支（格式：`YYYYMMDDHHmm-ci`，如 `202511221252-ci`）
 2. 下載所有圖示來源
 3. 建置 Plugin
@@ -146,6 +157,11 @@ figma-cloudarchitect/
 5. 比對 `./dist/` 與前一版 CI 分支的差異
 6. 若有變更：提交至 CI 分支並上傳產物
 7. 若無變更：跳過提交與上傳，終止建置
+
+**Release Job**（僅在 Build Job 有變更時執行）：
+1. 下載 Artifact
+2. 建立 `dist.zip`
+3. 產生 GitHub Release（tag: `vYYYYMMDDHHmm`）
 
 ## 技術細節
 

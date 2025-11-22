@@ -103,10 +103,12 @@
 ### 執行步驟
 
 ```
+Build Job:
 1. Checkout repository
 2. Create CI branch (YYYYMMDDHHmm-ci)
    ├─ 設定 Git 使用者資訊
-   └─ 建立並切換至新分支
+   ├─ 建立並切換至新分支
+   └─ 輸出 branch_name 供 Release Job 使用
 3. Setup Node.js (v20)
 4. Download icons (7 sources)
    ├─ Azure Architecture Icons
@@ -122,15 +124,21 @@
    ├─ Build UI
    └─ Compile TypeScript
 7. Prepare distribution
-8. Check for changes in dist ⭐ 新增
+8. Check for changes in dist
    ├─ Fetch previous CI branches
    ├─ Compare dist with latest CI branch
-   └─ Set has_changes flag
+   └─ Set has_changes flag (輸出供 Release Job 使用)
 9. [條件] 若有變更：
    ├─ Commit and push to CI branch
    └─ Upload artifact (30 days retention)
 10. [條件] 若無變更：
     └─ Skip and exit (顯示警告訊息)
+
+Release Job (僅在 has_changes=true 時執行):
+1. Download artifact from Build Job
+2. Create release archive (dist.zip)
+3. Generate release tag (vYYYYMMDDHHmm)
+4. Create GitHub Release
 ```
 
 ### 建置結果
@@ -146,6 +154,12 @@
 - `dist/` 目錄內所有檔案
 - 可直接下載使用
 - 保留 30 天
+
+**GitHub Release 內容** ⭐ 新增：
+- **Tag**: `vYYYYMMDDHHmm`（如 `v202511221330`）
+- **檔案**: `dist.zip`（包含所有 `dist/` 內容）
+- **說明**: 建置資訊與安裝步驟
+- **永久保留**：不受 30 天限制
 
 ## 優勢
 
@@ -169,11 +183,17 @@
 - 不影響主分支
 - 易於比對不同時間點的建置差異
 
-### 5. 智慧效率 ⭐ 新增
+### 5. 智慧效率
 - 自動偵測 `dist/` 內容變更
 - 無變更時跳過 commit 與 artifact 上傳
 - 避免產生冗餘的 CI 分支
 - 節省儲存空間與 Actions 配額
+
+### 6. 自動發布 Release ⭐ 新增
+- 僅在有變更時建立 GitHub Release
+- Release 命名格式：`vYYYYMMDDHHmm`
+- 包含 `dist.zip` 供下載
+- 永久保留，不受 Artifact 30 天限制
 
 ## 分支管理建議
 

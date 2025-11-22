@@ -9,15 +9,20 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.check_changes.outputs.has_changes }}
+      branch_name: ${{ steps.create_branch.outputs.branch_name }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Create CI branch
+        id: create_branch
         run: |
           BRANCH_NAME="$(date -u +'%Y%m%d%H%M')-ci"
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH_NAME"
@@ -95,13 +100,9 @@ jobs:
 
           # Restore current dist
           mkdir -p dist
-          cp manifest.json dist/
+          cp src/figma-cloudarchitect/manifest.json dist/
           cp src/figma-cloudarchitect/code.js dist/
           cp src/figma-cloudarchitect/ui-built.html dist/
-          cp src/figma-cloudarchitect/icons.json dist/ || true
-          cp -r src/figma-cloudarchitect/icons dist/ || true
-          cp README.md dist/
-          cp INSTALL.md dist/
 
           # Compare dist directories
           if diff -qr dist/ dist_old/ > /dev/null 2>&1; then
@@ -136,3 +137,61 @@ jobs:
           name: figma-cloudarchitect-${{ env.BRANCH_NAME }}
           path: dist/
           retention-days: 30
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: needs.build.outputs.has_changes == 'true'
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: figma-cloudarchitect-${{ needs.build.outputs.branch_name }}
+          path: dist/
+
+      - name: Create release archive
+        run: |
+          cd dist
+          zip -r ../dist.zip .
+          cd ..
+          echo "Release archive created: dist.zip"
+          ls -lh dist.zip
+
+      - name: Generate release tag
+        id: release_tag
+        run: |
+          # Extract timestamp from branch name (remove -ci suffix)
+          TIMESTAMP="${{ needs.build.outputs.branch_name }}"
+          TIMESTAMP="${TIMESTAMP%-ci}"
+          RELEASE_TAG="v${TIMESTAMP}"
+          echo "RELEASE_TAG=$RELEASE_TAG" >> $GITHUB_ENV
+          echo "Release tag: $RELEASE_TAG"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
+          body: |
+            ## Figma Cloud Architect Plugin - Build ${{ needs.build.outputs.branch_name }}
+
+            ### Build Information
+            - **Build Time**: ${{ needs.build.outputs.branch_name }}
+            - **Commit**: ${{ github.sha }}
+            - **Branch**: ${{ needs.build.outputs.branch_name }}
+
+            ### Installation
+            1. Download `dist.zip`
+            2. Extract the archive
+            3. Open Figma Desktop App
+            4. Go to Plugins → Development → Import plugin from manifest...
+            5. Select the extracted `manifest.json` file
+
+            ### Changes
+            This release contains updates to the plugin distribution files.
+          files: dist.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
