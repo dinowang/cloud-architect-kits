@@ -76,6 +76,8 @@ Trigger: Go to Actions → Build and Release → Run workflow
 
 **Note**: If no changes are detected in `./dist/`, the workflow will skip creating the CI branch and uploading artifacts.
 
+**Permissions**: The workflow requires `contents: write` permission to create branches and push changes. This is configured in the workflow file. For more details, see [docs/20251122-11-GITHUB-ACTIONS-PERMISSIONS.md](docs/20251122-11-GITHUB-ACTIONS-PERMISSIONS.md).
+
 ### Project Structure
 
 ```
