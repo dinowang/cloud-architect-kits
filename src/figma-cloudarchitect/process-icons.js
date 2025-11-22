@@ -76,6 +76,11 @@ const sources = [
     getCategoryFromPath: (relativePath) => path.dirname(relativePath),
   },
   {
+    name: 'Entra',
+    path: path.join(tempDir, 'entra-icons/Microsoft Entra architecture icons - Oct 2023/Microsoft Entra color icons SVG'),
+    getCategoryFromPath: (relativePath) => path.dirname(relativePath),
+  },
+  {
     name: 'Microsoft 365',
     path: path.join(tempDir, 'm365-icons'),
     getCategoryFromPath: (relativePath) => {

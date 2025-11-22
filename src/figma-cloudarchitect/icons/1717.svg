@@ -1,7 +1,50 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg   viewBox="0 0 256 391" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid">
-    <title>ActiveCampaign</title>
-    <g>
-        <path d="M1.27262883,-2.84217094e-14 L4.32189792,2.14204853 C13.8099129,8.74459812 236.507358,163.967515 242.719299,168.61702 C251.514298,174.79116 256,182.426933 256,191.284934 L256,195.682433 C255.899198,202.524388 253.442142,212.151007 242.719299,220.202589 L242.681498,220.22779 C237.515381,223.919673 184.93439,260.347098 129.266329,298.929173 C124.36507,302.32558 119.40788,305.76077 114.439063,309.20412 L111.125282,311.500559 C61.9597303,345.572363 12.6198159,379.77651 5.94733474,384.497711 L5.94733474,390.63405 L2.30585224,384.510312 C2.12944825,384.195304 1.96564453,383.930698 2.15464882,383.502289 L2.04124625,383.502289 L2.04124625,351.472363 C2.04124625,340.547916 3.25087365,335.293596 15.4101491,327.191613 C20.5896225,323.86287 64.9397948,293.237209 109.989121,262.064365 L115.289947,258.39606 C156.802003,229.666506 197.626531,201.363146 207.652705,194.422405 C186.484225,179.717872 27.7962298,69.5535758 16.9221834,61.5901954 L15.6369543,60.6577743 C7.59797214,54.8364424 1.27262883,50.2499385 1.27262883,38.1284638 L1.27262883,-2.84217094e-14 Z M21.8614953,111.361323 C32.5969385,118.266279 136.423291,190.314712 137.469115,191.058129 L139.825368,192.683565 L137.431314,194.283802 C137.431314,194.283802 130.412955,198.958508 122.625978,204.401831 C115.960427,209.290742 109.723286,211.735197 103.523945,211.735197 C98.0176207,211.735197 92.5616971,209.819954 86.8159669,206.002067 C80.6952523,201.916047 63.4532434,190.021458 46.000469,177.937961 L43.6202635,176.289756 C22.2051,161.458254 1.21945563,146.863887 0.831618841,146.591721 L-2.84217094e-14,146.012108 L-2.84217094e-14,121.542354 C-2.84217094e-14,115.922626 2.41925481,111.474726 6.66555102,109.320077 C11.2142541,107.001624 16.8969828,107.757641 21.8614953,111.361323 Z" fill="#004CFF"></path>
-    </g>
+<svg   viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="filter0_f">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="0.4" result="effect1_foregroundBlur"/>
+</filter>
+<filter id="filter1_f">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="4" result="effect1_foregroundBlur"/>
+</filter>
+<linearGradient id="paint0_linear" x1="43" y1="55" x2="29" y2="10" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0D36A5"/>
+<stop offset="1" stop-color="#1152D4"/>
+</linearGradient>
+<linearGradient id="paint1_linear" x1="46" y1="10" x2="46" y2="86" gradientUnits="userSpaceOnUse">
+<stop stop-color="#84CAFF"/>
+<stop offset="1" stop-color="#61B1FB"/>
+</linearGradient>
+<linearGradient id="paint2_linear" x1="37.5" y1="10" x2="37.5" y2="86" gradientUnits="userSpaceOnUse">
+<stop stop-color="#3B90F5"/>
+<stop offset="1" stop-color="#2A78EE"/>
+</linearGradient>
+<clipPath id="clip0">
+<rect width="96" height="96" fill="white"/>
+</clipPath>
+<clipPath id="clip1">
+<rect width="96" height="96" fill="white"/>
+</clipPath>
+</defs>
+<g clip-path="url(#clip0)">
+<g clip-path="url(#clip1)">
+<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="-1" y="10" width="97" height="76">
+<path d="M61.2116 10C62.3496 10 63.4337 10.4847 64.1925 11.3328L94.6136 45.3328C95.9723 46.8514 95.9723 49.1486 94.6136 50.6672L64.1925 84.6672C63.4337 85.5153 62.3496 86 61.2116 86H3.94634C0.488777 86 -1.34012 81.9095 0.965366 79.3328L29 48L0.965366 16.6672C-1.34012 14.0905 0.488777 10 3.94634 10H61.2116Z" fill="white"/>
+</mask>
+<g mask="url(#mask0)">
+<path d="M63 10L29 48L-5 10H63Z" fill="url(#paint0_linear)"/>
+<g filter="url(#filter0_f)">
+<path d="M63 10.4L-5 86.4H63L97 48.4L63 10.4Z" fill="black" fill-opacity="0.24"/>
+</g>
+<g filter="url(#filter1_f)">
+<path d="M63 12L-5 88H63L97 50L63 12Z" fill="black" fill-opacity="0.32"/>
+</g>
+<path d="M-5 86L63 10L97 48L63 86H-5Z" fill="url(#paint1_linear)"/>
+<path d="M-5 86L63 10L80 29L29 86H-5Z" fill="url(#paint2_linear)"/>
+</g>
+</g>
+</g>
 </svg>
