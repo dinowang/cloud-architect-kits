@@ -12,11 +12,13 @@ figma.ui.onmessage = async (msg) => {
       const scale = size / longerSide;
       node.resize(node.width * scale, node.height * scale);
       node.expanded = false;
+      node.lockAspectRatio();
       
       // Create a group and name it
       const group = figma.group([node], figma.currentPage);
       group.name = name;
       group.expanded = false;
+      group.lockAspectRatio();
       
       // Add to current page (already done by group)
       // figma.currentPage.appendChild(group);
