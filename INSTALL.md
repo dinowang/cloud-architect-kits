@@ -11,11 +11,11 @@
 ### Method 1: One-Click Full Build (Recommended)
 
 ```bash
-./scripts/run-full-steps.sh
+./scripts/build-and-release.sh
 ```
 
 This script will automatically complete the following steps:
-- Download all icon sources (Azure, M365, D365, Entra, Power Platform, Kubernetes, Gilbarbara)
+- Download all icon sources (Azure, M365, D365, Entra, Power Platform, Kubernetes, Gilbarbara, Lobe)
 - Install dependencies
 - Build the plugin
 - Generate distribution to `./dist/` directory
@@ -32,6 +32,7 @@ This script will automatically complete the following steps:
 ./scripts/download-powerplatform-icons.sh
 ./scripts/download-kubernetes-icons.sh
 ./scripts/download-gilbarbara-icons.sh
+./scripts/download-lobe-icons.sh
 ```
 
 #### 2. Install Dependencies
@@ -48,13 +49,14 @@ npm run build
 ```
 
 This command will:
-- Process icons from all sources (Azure, M365, D365, Entra, Power Platform, Kubernetes, Gilbarbara)
+- Process icons from all sources (Azure, M365, D365, Entra, Power Platform, Kubernetes, Gilbarbara, Lobe)
 - Build UI interface (with all icons embedded)
 - Compile TypeScript code
 
 After building, the following files will be generated:
 - `src/figma-cloudarchitect/code.js` - Plugin main program
-- `src/figma-cloudarchitect/ui-built.html` - Built UI interface (~23MB)
+- `src/figma-cloudarchitect/ui-built.html` - Built UI interface (~52MB, includes all icons)
+- `src/figma-cloudarchitect/icons-data.*.js` - Icon data file with hash (~26MB)
 - `src/figma-cloudarchitect/icons/` - Processed icon files (SVG only)
 - `src/figma-cloudarchitect/icons.json` - Icon index (includes source and category info)
 - `./dist/` - Complete distribution files (when using Method 1)
@@ -83,9 +85,15 @@ After building, the following files will be generated:
 
 2. The plugin window will open, displaying all icon sources (organized by source and category)
 
-3. Use the search box to find icons (searchable by name, source, or category)
+3. Adjust icon size using the size control input or preset buttons (32, 64, 128, 256)
 
-4. Click an icon to insert it onto the canvas (64x64px)
+4. Use the search box to find icons (searchable by name, source, or category)
+   - Search results automatically scroll to top
+   - Source headers show filtered/total icon count
+
+5. Click an icon to insert it onto the canvas at the specified size
+   - Icons maintain aspect ratio based on longest side
+   - Icons are displayed at 48x48px in the list for better browsing
 
 ## Development Mode
 
@@ -123,9 +131,10 @@ Please check:
 ### Icons Not Displaying
 
 Please check:
-- `ui-built.html` file size is approximately 23MB (includes all icons)
+- `ui-built.html` file size is approximately 52MB (includes all icons)
+- `icons-data.*.js` file size is approximately 26MB
 - No error messages during build process
-- Confirm `temp/` directory contains all icon sources
+- Confirm `temp/` directory contains all icon sources (8 sources: Azure, M365, D365, Entra, Power Platform, Kubernetes, Gilbarbara, Lobe)
 - Try re-running `npm run build`
 
 ## Updating Icons
@@ -140,6 +149,7 @@ If you need to update any icon sources:
    - `temp/powerplatform-icons/`
    - `temp/kubernetes-icons/`
    - `temp/gilbarbara-icons/`
+   - `temp/lobe-icons/`
 
 2. Delete old processed results:
    ```bash
@@ -174,8 +184,20 @@ If you encounter issues, please check:
 2. Figma Desktop App Console (Plugins → Development → Open Console)
 3. Project README.md and documentation
 
+## New Features (v2.0.0)
+
+- **Smart Icon Scaling**: Icons now maintain aspect ratio based on longest side (no more distortion)
+- **48x48 Preview Size**: Better icon browsing experience with optimized preview size
+- **Sticky Source Headers**: Source headers stay visible while scrolling for easy navigation
+- **Icon Count Display**: Real-time display of filtered/total icons per source (e.g., "12 / 705")
+- **Auto-Scroll to Top**: Search results automatically scroll to top for better UX
+- **8 Icon Sources**: Now includes 4,323 icons from Azure, M365, D365, Entra, Power Platform, Kubernetes, Gilbarbara, and Lobe
+- **Customizable Size**: Adjustable output size (16-512px) with preset buttons (32, 64, 128, 256)
+
 ## License
 
 This project uses the ISC license.
-- Azure, Microsoft 365, Dynamics 365, Power Platform icons are copyright of Microsoft
+- Azure, Microsoft 365, Dynamics 365, Entra, Power Platform icons are copyright of Microsoft
+- Kubernetes icons follow their original license terms
 - Gilbarbara logos follow their original license terms
+- Lobe icons follow their original license terms
