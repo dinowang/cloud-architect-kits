@@ -88,7 +88,7 @@ jobs:
           <html>
           <head>
             <meta charset="UTF-8">
-            <meta http-equiv="refresh" content="0; url=/taskpane-built.html">
+            <meta http-equiv="refresh" content="0; url=/taskpane.html">
             <title>Cloud Architect Kit - PowerPoint Add-in</title>
           </head>
           <body>
@@ -170,10 +170,10 @@ jobs:
         run: |
           SWA_URL="https://${{ steps.swa_name.outputs.swa_url }}"
           echo "Updating manifest.xml with Static Web App URL: $SWA_URL"
-          
+
           # Update all localhost:3000 URLs to the actual Azure URL
           sed -i "s|https://localhost:3000|$SWA_URL|g" ppt-addin/manifest.xml
-          
+
           # Verify the update
           echo "Updated manifest.xml URLs:"
           grep -E "(IconUrl|SourceLocation|AppDomain)" ppt-addin/manifest.xml | head -5
