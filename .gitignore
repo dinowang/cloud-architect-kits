@@ -234,4 +234,4 @@ $RECYCLE.BIN/
 /src/figma-azure/code.js
 *.js.map
 /dist/
-
+.history/
