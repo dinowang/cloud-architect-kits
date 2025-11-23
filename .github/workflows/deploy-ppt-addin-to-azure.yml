@@ -82,6 +82,21 @@ jobs:
           mkdir -p ppt-addin
           unzip -q cloud-architect-kit-powerpoint-addin.zip -d ppt-addin
 
+          echo "Creating index.html for Azure Static Web Apps validation..."
+          cat > ppt-addin/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="refresh" content="0; url=/taskpane-built.html">
+            <title>Cloud Architect Kit - PowerPoint Add-in</title>
+          </head>
+          <body>
+            <p>Redirecting to PowerPoint Add-in...</p>
+          </body>
+          </html>
+          EOF
+
           echo "Add-in contents:"
           ls -la ppt-addin/
 
@@ -97,6 +112,13 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Restore Terraform state
+        uses: actions/cache/restore@v4
+        id: cache-terraform-state
+        with:
+          path: src/powerpoint/terraform/terraform.tfstate
+          key: terraform-state-ppt-${{ vars.CODENAME }}
 
       - name: Terraform Init
         working-directory: src/powerpoint/terraform
@@ -117,6 +139,13 @@ jobs:
       - name: Terraform Apply
         working-directory: src/powerpoint/terraform
         run: terraform apply -auto-approve tfplan
+
+      - name: Save Terraform state
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: src/powerpoint/terraform/terraform.tfstate
+          key: terraform-state-ppt-${{ vars.CODENAME }}
 
       - name: Get Static Web App deployment token
         id: swa_token
