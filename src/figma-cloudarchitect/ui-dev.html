@@ -91,6 +91,7 @@
     .icons-list {
       max-height: 500px;
       overflow-y: auto;
+      position: relative;
     }
     
     .source-section {
@@ -106,6 +107,23 @@
       background: #f0f8ff;
       border-radius: 6px;
       border-left: 4px solid #18a0fb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    
+    .source-header-title {
+      flex-grow: 1;
+    }
+    
+    .source-header-count {
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      margin-left: 12px;
     }
     
     .category-section {
@@ -140,8 +158,8 @@
     }
     
     .icon-item-image {
-      width: 64px;
-      height: 64px;
+      width: 48px;
+      height: 48px;
       flex-shrink: 0;
       display: flex;
       align-items: center;
@@ -198,19 +216,25 @@
     let allIcons = [];
     let organizedIcons = {};
     
+    let sourceIconCounts = {};
+    
     async function loadIcons() {
       allIcons = window.iconsData || [];
       
       // Group icons by source, then by category
       organizedIcons = {};
+      sourceIconCounts = {};
+      
       allIcons.forEach(icon => {
         if (!organizedIcons[icon.source]) {
           organizedIcons[icon.source] = {};
+          sourceIconCounts[icon.source] = 0;
         }
         if (!organizedIcons[icon.source][icon.category]) {
           organizedIcons[icon.source][icon.category] = [];
         }
         organizedIcons[icon.source][icon.category].push(icon);
+        sourceIconCounts[icon.source]++;
       });
       
       renderIcons();
@@ -238,6 +262,7 @@
           const categoryNames = Object.keys(categories).sort();
           let sourceShown = false;
           let sourceSection = null;
+          let sourceFilteredCount = 0;
           
           categoryNames.forEach(category => {
             if (totalShown >= MAX_INITIAL_ICONS && !query) return;
@@ -269,7 +294,17 @@
                 
                 const sourceHeader = document.createElement('div');
                 sourceHeader.className = 'source-header';
-                sourceHeader.textContent = source;
+                
+                const sourceTitle = document.createElement('div');
+                sourceTitle.className = 'source-header-title';
+                sourceTitle.textContent = source;
+                sourceHeader.appendChild(sourceTitle);
+                
+                const sourceCount = document.createElement('div');
+                sourceCount.className = 'source-header-count';
+                sourceCount.dataset.source = source;
+                sourceHeader.appendChild(sourceCount);
+                
                 sourceSection.appendChild(sourceHeader);
                 
                 sourceShown = true;
@@ -285,6 +320,7 @@
               
               // Show all icons if source/category matches, otherwise show filtered icons
               const iconsToShow = (sourceMatches || categoryMatches) ? icons : filteredIcons;
+              sourceFilteredCount += iconsToShow.length;
               
               // Use document fragment for better performance
               const fragment = document.createDocumentFragment();
@@ -345,6 +381,15 @@
           });
           
           if (sourceShown) {
+            // Update source count display
+            const countElement = sourceSection.querySelector('.source-header-count');
+            const totalCount = sourceIconCounts[source];
+            if (query && sourceFilteredCount !== totalCount) {
+              countElement.textContent = `${sourceFilteredCount} / ${totalCount}`;
+            } else {
+              countElement.textContent = `${totalCount}`;
+            }
+            
             container.appendChild(sourceSection);
           }
         });
@@ -365,6 +410,9 @@
     const searchInput = document.getElementById('search');
     searchInput.addEventListener('input', (e) => {
       const query = e.target.value;
+      // Scroll to top when search query changes
+      const container = document.getElementById('icons-container');
+      container.scrollTop = 0;
       renderIcons(query);
     });
     
