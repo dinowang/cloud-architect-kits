@@ -187,56 +187,52 @@ async function insertIcon(icon) {
   const iconSize = parseInt(document.getElementById('icon-size').value) || 64;
   
   try {
-    // Insert SVG as image
-    const svgData = atob(icon.svg);
-    await insertSvgAsImage(svgData, icon.name, iconSize);
+    // Decode SVG from base64
+    const svgXml = atob(icon.svg);
+    await insertSvgIntoSlide(svgXml, icon.name, iconSize);
     
   } catch (error) {
     console.error('Error inserting icon:', error);
   }
 }
 
-async function insertSvgAsImage(svgData, name, size) {
-  return PowerPoint.run(async (context) => {
-    // Get the current active slide
-    const slides = context.presentation.slides;
-    slides.load("items");
-    await context.sync();
-    
-    // Get selected slide or use the first slide
-    const slide = context.presentation.getSelectedSlides().getItemAt(0);
-    slide.load("shapes,width,height");
-    
-    // Convert SVG to base64 data URL
-    const svgBase64 = btoa(unescape(encodeURIComponent(svgData)));
-    const dataUrl = `data:image/svg+xml;base64,${svgBase64}`;
-    
-    // Add image to slide
-    const image = slide.shapes.addImage(dataUrl);
-    image.load("width,height");
-    
-    await context.sync();
-    
-    // Calculate scale to fit the desired size
-    const originalWidth = image.width;
-    const originalHeight = image.height;
-    const longerSide = Math.max(originalWidth, originalHeight);
-    const scale = size / longerSide;
-    
-    // Set scaled dimensions
-    image.width = originalWidth * scale;
-    image.height = originalHeight * scale;
-    
-    // Center on slide
-    image.left = (slide.width - image.width) / 2;
-    image.top = (slide.height - image.height) / 2;
-    
-    await context.sync();
-    
-    console.log(`Inserted ${name} icon (${Math.round(image.width)}x${Math.round(image.height)}px)`);
-  }).catch((error) => {
-    console.error('Error inserting image:', error);
-    throw error;
+async function insertSvgIntoSlide(svgXml, name, size) {
+  return new Promise((resolve, reject) => {
+    // Get slide dimensions to calculate center position
+    PowerPoint.run(async (context) => {
+      const slide = context.presentation.getSelectedSlides().getItemAt(0);
+      slide.load("width,height");
+      await context.sync();
+      
+      const slideWidth = slide.width;
+      const slideHeight = slide.height;
+      
+      // Calculate center position
+      // Note: Office uses points (pt) for dimensions
+      // We'll set imageWidth and let height scale proportionally
+      const imageLeft = (slideWidth - size) / 2;
+      const imageTop = (slideHeight - size) / 2;
+      
+      // Insert SVG using setSelectedDataAsync with XmlSvg coercion
+      Office.context.document.setSelectedDataAsync(svgXml, {
+        coercionType: Office.CoercionType.XmlSvg,
+        imageLeft: imageLeft,
+        imageTop: imageTop,
+        imageWidth: size
+        // imageHeight is automatically calculated to maintain aspect ratio
+      }, function (asyncResult) {
+        if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+          console.error('Failed to insert icon:', asyncResult.error.message);
+          reject(new Error(asyncResult.error.message));
+        } else {
+          console.log(`Inserted ${name} icon (${size}pt width, aspect ratio maintained)`);
+          resolve();
+        }
+      });
+    }).catch((error) => {
+      console.error('Error getting slide dimensions:', error);
+      reject(error);
+    });
   });
 }
 
