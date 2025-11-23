@@ -233,5 +233,5 @@ $RECYCLE.BIN/
 /src/figma-azure/ui-built.html
 /src/figma-azure/code.js
 *.js.map
-!/dist/
+/dist/
 

@@ -103,8 +103,7 @@ jobs:
           cp src/powerpoint/add-in/taskpane.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.css dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.js dist/powerpoint-addin/
-          cp src/powerpoint/add-in/taskpane-platform.js dist/powerpoint-addin/
-          cp src/powerpoint/add-in/icons-data.*.js dist/powerpoint-addin/ 2>/dev/null || true
+          cp src/powerpoint/add-in/icons-data.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
           cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
@@ -116,6 +115,8 @@ jobs:
           cp src/google-slides/addon/SidebarScript.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarData.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarPlatform.html dist/google-slides-addon/
+          
+          # Draw.io icon libraries (already built to dist/drawio-iconlib by build step)
 
       - name: Check for changes in dist
         id: check_changes
@@ -145,7 +146,6 @@ jobs:
           mkdir -p dist/figma-plugin
           mkdir -p dist/powerpoint-addin
           mkdir -p dist/google-slides-addon
-          mkdir -p dist/drawio-iconlib
 
           # Figma plugin
           cp src/figma/plugin/manifest.json dist/figma-plugin/
@@ -157,7 +157,7 @@ jobs:
           cp src/powerpoint/add-in/taskpane.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.css dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.js dist/powerpoint-addin/
-          cp src/powerpoint/add-in/icons-data.js dist/powerpoint-addin/ 2>/dev/null || true
+          cp src/powerpoint/add-in/icons-data.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
           cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
@@ -169,6 +169,12 @@ jobs:
           cp src/google-slides/addon/SidebarScript.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarData.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarPlatform.html dist/google-slides-addon/
+          
+          # Draw.io icon libraries need to be rebuilt
+          cd src/drawio/iconlib
+          npm ci
+          npm run build
+          cd ../../..
 
           # Compare dist directories
           if diff -qr dist/ dist_old/ > /dev/null 2>&1; then
@@ -225,10 +231,14 @@ jobs:
           zip -r ../../cloud-architect-kit-google-slides-addon.zip .
           cd ../..
 
-          # Create Draw.io icon libraries archive
-          cd dist/drawio-iconlib
-          zip -r ../../cloud-architect-kit-drawio-iconlib.zip .
-          cd ../..
+          # Create Draw.io icon libraries archive (if exists)
+          if [ -d "dist/drawio-iconlib" ]; then
+            cd dist/drawio-iconlib
+            zip -r ../../cloud-architect-kit-drawio-iconlib.zip .
+            cd ../..
+          else
+            echo "⚠️ Draw.io icon libraries directory not found, skipping archive creation"
+          fi
 
           echo "Release archives created:"
           ls -lh cloud-architect-kit-*.zip
