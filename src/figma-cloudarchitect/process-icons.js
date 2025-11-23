@@ -102,8 +102,18 @@ const sources = [
     getCategoryFromPath: (relativePath) => 'Power Platform',
   },
   {
+    name: 'Kubernetes',
+    path: path.join(tempDir, 'kubernetes-icons'),
+    getCategoryFromPath: (relativePath) => 'General',
+  },
+  {
     name: 'Gilbarbara',
     path: path.join(tempDir, 'gilbarbara-icons/logos'),
+    getCategoryFromPath: (relativePath) => 'Logos',
+  },
+  {
+    name: 'Lobe-icons',
+    path: path.join(tempDir, 'lobe-icons/packages/static-svg/icons/'),
     getCategoryFromPath: (relativePath) => 'Logos',
   },
 ];
