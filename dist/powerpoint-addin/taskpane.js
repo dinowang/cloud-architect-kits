@@ -187,16 +187,6 @@ async function insertIcon(icon) {
   const iconSize = parseInt(document.getElementById('icon-size').value) || 64;
   
   try {
-    await Office.context.document.setSelectedDataAsync(
-      icon.name,
-      { coercionType: Office.CoercionType.Text },
-      (result) => {
-        if (result.status === Office.AsyncResultStatus.Failed) {
-          console.error('Failed to insert icon name:', result.error.message);
-        }
-      }
-    );
-    
     // Insert SVG as image
     const svgData = atob(icon.svg);
     await insertSvgAsImage(svgData, icon.name, iconSize);
@@ -208,31 +198,32 @@ async function insertIcon(icon) {
 
 async function insertSvgAsImage(svgData, name, size) {
   return PowerPoint.run(async (context) => {
+    // Get the current active slide
     const slides = context.presentation.slides;
-    const selectedSlides = slides.getByIds(Office.context.document.getActiveView());
-    
-    if (!selectedSlides || selectedSlides.items.length === 0) {
-      console.error('No slide selected');
-      return;
-    }
-    
-    const slide = selectedSlides.items[0];
-    
-    // Convert SVG to data URL
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-    const svgUrl = URL.createObjectURL(svgBlob);
-    
-    // Create image
-    const image = slide.shapes.addImage(svgUrl);
-    
-    // Get original dimensions and calculate scale
+    slides.load("items");
     await context.sync();
     
+    // Get selected slide or use the first slide
+    const slide = context.presentation.getSelectedSlides().getItemAt(0);
+    slide.load("shapes,width,height");
+    
+    // Convert SVG to base64 data URL
+    const svgBase64 = btoa(unescape(encodeURIComponent(svgData)));
+    const dataUrl = `data:image/svg+xml;base64,${svgBase64}`;
+    
+    // Add image to slide
+    const image = slide.shapes.addImage(dataUrl);
+    image.load("width,height");
+    
+    await context.sync();
+    
+    // Calculate scale to fit the desired size
     const originalWidth = image.width;
     const originalHeight = image.height;
     const longerSide = Math.max(originalWidth, originalHeight);
     const scale = size / longerSide;
     
+    // Set scaled dimensions
     image.width = originalWidth * scale;
     image.height = originalHeight * scale;
     
@@ -242,11 +233,10 @@ async function insertSvgAsImage(svgData, name, size) {
     
     await context.sync();
     
-    URL.revokeObjectURL(svgUrl);
-    
     console.log(`Inserted ${name} icon (${Math.round(image.width)}x${Math.round(image.height)}px)`);
   }).catch((error) => {
     console.error('Error inserting image:', error);
+    throw error;
   });
 }
 
