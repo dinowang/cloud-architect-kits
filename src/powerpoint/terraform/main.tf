@@ -12,10 +12,8 @@ terraform {
     }
   }
   
-  backend "azurerm" {
-    # Backend configuration will be provided via -backend-config flags
-    # or environment variables during terraform init
-    use_oidc = true
+  backend "local" {
+    path = "terraform.tfstate"
   }
 }
 
