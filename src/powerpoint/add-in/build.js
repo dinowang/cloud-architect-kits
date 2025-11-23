@@ -41,13 +41,10 @@ const devHtml = templateHtml.replace('/*ICONS_JS_PATH*/', jsFilename);
 fs.writeFileSync('taskpane-dev.html', devHtml, 'utf8');
 console.log(`Development build: taskpane-dev.html (references external JS)`);
 
-// Production build (inline JS)
-const prodHtml = templateHtml.replace(
-  '<script src="/*ICONS_JS_PATH*/"></script>',
-  `<script>${jsContent}</script>`
-);
+// Production build (references external JS file with hash)
+const prodHtml = templateHtml.replace('/*ICONS_JS_PATH*/', jsFilename);
 fs.writeFileSync('taskpane-built.html', prodHtml, 'utf8');
-console.log(`Production build: taskpane-built.html (inline JS)`);
+console.log(`Production build: taskpane-built.html (references ${jsFilename})`);
 
 // File size info
 const jsSize = (fs.statSync(jsFilename).size / 1024 / 1024).toFixed(2);

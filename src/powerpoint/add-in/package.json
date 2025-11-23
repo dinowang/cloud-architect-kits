@@ -1,5 +1,5 @@
 {
-  "name": "powerpoint-cloudarchitect",
+  "name": "cloud-architect-kit-powerpoint-addin",
   "version": "1.0.0",
   "description": "PowerPoint Add-in for inserting cloud architecture icons",
   "main": "index.js",

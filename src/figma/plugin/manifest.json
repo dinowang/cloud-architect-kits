@@ -1,11 +1,16 @@
 {
-  "name": "Cloud Architect Icons",
-  "id": "figma-cloudarchitect",
+  "name": "Cloud Architect Kits",
+  "id": "cloud-architect-kits-figma-plugin",
   "api": "1.0.0",
   "main": "code.js",
   "ui": "ui-built.html",
-  "editorType": ["figma", "figjam"],
+  "editorType": [
+    "figma",
+    "figjam"
+  ],
   "networkAccess": {
-    "allowedDomains": ["none"]
+    "allowedDomains": [
+      "none"
+    ]
   }
 }

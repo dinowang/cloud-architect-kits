@@ -79,9 +79,9 @@ This will:
 
 Build output:
 ```
-✓ icons-data.{hash}.js created (25.8 MB)
-✓ ui-built.html created (inline JS)
-✓ ui-dev.html created (references external JS)
+✓ icons-data.{hash}.js created (~26 MB)
+✓ ui-built.html created (inline JS, ~26 MB)
+✓ ui-dev.html created (references external JS, 4.6 KB)
 ✓ code.js compiled
 ```
 

@@ -83,6 +83,7 @@ jobs:
           cp src/powerpoint/add-in/manifest.xml dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane-built.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.js dist/powerpoint-addin/
+          cp src/powerpoint/add-in/icons-data.*.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
           cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
@@ -128,6 +129,7 @@ jobs:
           cp src/powerpoint/add-in/manifest.xml dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane-built.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.js dist/powerpoint-addin/
+          cp src/powerpoint/add-in/icons-data.*.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
           cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
@@ -209,7 +211,7 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Cloud Architect Kit ${{ env.RELEASE_TAG }}
           body: |
-            ## Cloud Architect Icons Kit - Build ${{ needs.build.outputs.branch_name }}
+            ## Cloud Architect Kit - Build ${{ needs.build.outputs.branch_name }}
 
             ### Build Information
             - **Build Time**: ${{ needs.build.outputs.branch_name }}

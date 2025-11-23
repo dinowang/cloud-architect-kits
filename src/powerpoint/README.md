@@ -24,17 +24,21 @@ A PowerPoint Add-in that allows you to quickly insert cloud architecture and tec
 ## Project Structure
 
 ```
-powerpoint-addin/
+src/powerpoint/
 ├── README.md              # This file
 ├── INSTALL.md             # Detailed installation guide
 ├── add-in/                # PowerPoint Add-in source
 │   ├── manifest.xml      # Office Add-in manifest
 │   ├── package.json      # Dependencies
-│   ├── taskpane.html     # UI interface
+│   ├── taskpane.html     # UI template
 │   ├── taskpane.js       # Application logic
 │   ├── build.js          # Build script
-│   ├── deploy.sh         # Deployment script
-│   └── QUICKSTART.md     # 5-minute quick start
+│   ├── icons/            # Icon SVG files (from prebuild)
+│   ├── icons.json        # Icon metadata (from prebuild)
+│   ├── icons-data.*.js   # Generated icons data (~26 MB)
+│   ├── taskpane-built.html # Production build (4.6 KB)
+│   ├── taskpane-dev.html   # Development build
+│   └── staticwebapp.config.json # Azure config
 └── terraform/             # Infrastructure as Code
     ├── main.tf           # Main configuration
     ├── variables.tf      # Variables
@@ -75,18 +79,16 @@ cd add-in
 npm install
 ```
 
-### 2. Process Icons
+### 2. Build Add-in
 
-Copy icons from the Figma plugin:
-
-```bash
-cp -r ../../figma-cloudarchitect/icons ./icons
-cp ../../figma-cloudarchitect/icons.json ./icons.json
-```
-
-Or run the build process:
+Icons are copied from the prebuild system during the build process:
 
 ```bash
+# From project root
+./scripts/build-and-release.sh
+
+# Or manually
+cd add-in
 npm run build
 ```
 
@@ -304,8 +306,9 @@ Edit `add-in/staticwebapp.config.json` to customize:
 
 ### Icons Not Displaying
 
-- Verify icons are processed: `ls icons/ | wc -l` should show 4000+
-- Check `icons-data.*.js` exists and is ~26MB
+- Verify icons are processed: `ls icons/ | wc -l` should show 4300+
+- Check `icons-data.*.js` exists and is ~26 MB
+- Check `taskpane-built.html` references the correct icons-data file
 - Run `npm run build` to regenerate
 
 ### Terraform Issues
@@ -329,12 +332,14 @@ ISC
 
 ## Notes
 
-- All icons are embedded in the add-in for offline use
+- Icons are loaded from external JS file (~26 MB) with browser caching
 - Static Web App deployment supports custom domains
 - Free tier Static Web Apps have bandwidth limits
 - Icons maintain aspect ratio when inserted
-- Built UI file: ~52MB (includes all icons)
+- taskpane-built.html: 4.6 KB (references external icons-data.*.js)
+- icons-data.*.js: ~26 MB (cached by browser)
 
 ## Related Projects
 
-- [Figma Cloud Architect Plugin](../figma-cloudarchitect) - Source of icon library
+- [Figma Plugin](../figma/) - Figma version of icon library
+- [Prebuild System](../prebuild/) - Unified icon processing

@@ -35,7 +35,7 @@ See [INSTALL.md](INSTALL.md) for detailed installation instructions.
 ### Quick Start
 
 1. Clone the repository
-2. Navigate to the figma-plugin directory
+2. Navigate to `src/figma/plugin` directory
 3. Install dependencies: `npm install`
 4. Build the plugin: `npm run build`
 5. Load in Figma: Plugins → Development → Import plugin from manifest...
@@ -78,7 +78,7 @@ npm run watch
 ### Project Structure
 
 ```
-figma-plugin/
+src/figma/plugin/
 ├── manifest.json          # Figma plugin manifest
 ├── code.ts               # Plugin backend code
 ├── ui.html               # UI template
@@ -86,9 +86,9 @@ figma-plugin/
 ├── package.json          # Dependencies
 ├── icons/                # Icon SVG files (from prebuild)
 ├── icons.json            # Icon metadata (from prebuild)
-├── icons-data.*.js       # Generated icons data
-├── ui-built.html         # Production build
-├── ui-dev.html           # Development build
+├── icons-data.*.js       # Generated icons data (~26 MB)
+├── ui-built.html         # Production build (inline icons)
+├── ui-dev.html           # Development build (references external JS)
 └── code.js               # Compiled backend code
 ```
 
@@ -129,6 +129,6 @@ ISC
 
 ## Related
 
-- [PowerPoint Add-in](../powerpoint-addin/) - Insert icons into PowerPoint
+- [PowerPoint Add-in](../powerpoint/) - Insert icons into PowerPoint
 - [Prebuild System](../prebuild/) - Unified icon processing
 - [Project Root](../../README.md) - Cloud Architect Kits overview

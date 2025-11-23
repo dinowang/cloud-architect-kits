@@ -2,13 +2,12 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
-  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
-  xsi:type="TaskPaneApp">
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
   <Id>12345678-1234-1234-1234-123456789abc</Id>
   <Version>1.0.0.0</Version>
   <ProviderName>Cloud Architect</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Cloud Architect Icons"/>
+  <DisplayName DefaultValue="Cloud Architect Kits"/>
   <Description DefaultValue="Insert cloud architecture and technology icons into your presentations"/>
   <IconUrl DefaultValue="https://localhost:3000/assets/icon-32.png"/>
   <HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
@@ -76,7 +75,7 @@
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane-built.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Get started with Cloud Architect Icons"/>
+        <bt:String id="GetStarted.Title" DefaultValue="Get started with Cloud Architect Kits"/>
         <bt:String id="CommandsGroup.Label" DefaultValue="Cloud Icons"/>
         <bt:String id="TaskpaneButton.Label" DefaultValue="Show Icons"/>
       </bt:ShortStrings>

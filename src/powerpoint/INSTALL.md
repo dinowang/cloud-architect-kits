@@ -11,12 +11,14 @@
 ## Project Structure
 
 ```
-powerpoint-cloudarchitect/
+src/powerpoint/
 ├── README.md              # Project overview
 ├── INSTALL.md             # This installation guide
 ├── add-in/                # PowerPoint Add-in source
 │   ├── manifest.xml      # Office Add-in manifest
-│   ├── deploy.sh         # One-click deployment script
+│   ├── taskpane.html     # UI template
+│   ├── taskpane.js       # Application logic
+│   ├── build.js          # Build script
 │   └── ...               # Other add-in files
 └── terraform/             # Infrastructure as Code
     ├── main.tf           # Main Terraform configuration
@@ -25,56 +27,37 @@ powerpoint-cloudarchitect/
 
 ## Quick Start
 
-### Option 1: Use Deployment Script (Recommended)
+### Build from Source
+
+Icons are automatically copied from the prebuild system:
+
+#### 1. Build everything from project root
 
 ```bash
-cd add-in
-./deploy.sh
+# From project root
+./scripts/build-and-release.sh
 ```
 
-This script will:
-1. Copy icons from Figma plugin
-2. Install dependencies
-3. Build the add-in
-4. Optionally deploy infrastructure with Terraform
-5. Provide deployment instructions
+This will:
+1. Download all icon sources
+2. Prebuild and normalize icons
+3. Copy icons to PowerPoint add-in
+4. Install dependencies
+5. Build the add-in
+6. Create distribution packages
 
-### Option 2: Manual Steps
-
-#### 1. Copy Icons from Figma Plugin
-
-First, ensure the Figma plugin is built:
+#### 2. Or build PowerPoint add-in only
 
 ```bash
-cd ../figma-cloudarchitect
+cd src/powerpoint/add-in
 npm install
-npm run build
-```
-
-Then copy icons to PowerPoint add-in:
-
-```bash
-cd ../powerpoint-cloudarchitect/add-in
-cp -r ../../figma-cloudarchitect/icons ./icons
-cp ../../figma-cloudarchitect/icons.json ./icons.json
-```
-
-#### 2. Install Dependencies
-
-```bash
-npm install
-```
-
-#### 3. Build Add-in
-
-```bash
 npm run build
 ```
 
 This generates:
-- `taskpane-built.html` (~52MB, production)
-- `taskpane-dev.html` (development)
-- `icons-data.*.js` (~26MB)
+- `taskpane-built.html` (4.6 KB, references external JS)
+- `taskpane-dev.html` (4.6 KB, development)
+- `icons-data.*.js` (~26 MB, with hash for caching)
 
 ## Local Development
 
