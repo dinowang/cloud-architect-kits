@@ -15,7 +15,7 @@ This guide provides detailed instructions for installing and using the Figma plu
 #### Option A: From Release
 
 1. Download the latest release from GitHub
-2. Extract `cloudarchitect-kit-figma-plugin.zip`
+2. Extract `cloud-architect-kit-figma-plugin.zip`
 
 #### Option B: Build from Source
 

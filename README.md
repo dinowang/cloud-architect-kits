@@ -92,7 +92,7 @@ Then sideload `manifest.xml` in PowerPoint.
 ## 📦 Project Structure
 
 ```
-cloudarchitect-kits/
+cloud-architect-kits/
 ├── README.md                  # This file
 ├── INSTALL.md                 # Installation index
 ├── src/

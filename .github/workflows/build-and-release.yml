@@ -114,11 +114,21 @@ jobs:
           # Move old dist to temp location
           mv dist dist_old
 
-          # Restore current dist
-          mkdir -p dist
-          cp src/figma/plugin/manifest.json dist/
-          cp src/figma/plugin/code.js dist/
-          cp src/figma/plugin/ui-built.html dist/
+          # Restore current dist with proper structure
+          mkdir -p dist/figma-plugin
+          mkdir -p dist/powerpoint-addin
+
+          # Figma plugin
+          cp src/figma/plugin/manifest.json dist/figma-plugin/
+          cp src/figma/plugin/code.js dist/figma-plugin/
+          cp src/figma/plugin/ui-built.html dist/figma-plugin/
+
+          # PowerPoint add-in
+          cp src/powerpoint/add-in/manifest.xml dist/powerpoint-addin/
+          cp src/powerpoint/add-in/taskpane-built.html dist/powerpoint-addin/
+          cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
+          cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
+          cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
 
           # Compare dist directories
           if diff -qr dist/ dist_old/ > /dev/null 2>&1; then
@@ -150,7 +160,7 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: cloudarchitect-kit-${{ env.BRANCH_NAME }}
+          name: cloud-architect-kit-${{ env.BRANCH_NAME }}
           path: dist/
           retention-days: 30
 
@@ -163,23 +173,23 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: cloudarchitect-kit-${{ needs.build.outputs.branch_name }}
+          name: cloud-architect-kit-${{ needs.build.outputs.branch_name }}
           path: dist/
 
       - name: Create release archives
         run: |
           # Create Figma plugin archive
           cd dist/figma-plugin
-          zip -r ../../cloudarchitect-kit-figma-plugin.zip .
+          zip -r ../../cloud-architect-kit-figma-plugin.zip .
           cd ../..
 
           # Create PowerPoint add-in archive
           cd dist/powerpoint-addin
-          zip -r ../../cloudarchitect-kit-powerpoint-addin.zip .
+          zip -r ../../cloud-architect-kit-powerpoint-addin.zip .
           cd ../..
 
           echo "Release archives created:"
-          ls -lh cloudarchitect-kit-*.zip
+          ls -lh cloud-architect-kit-*.zip
 
       - name: Generate release tag
         id: release_tag
@@ -205,18 +215,18 @@ jobs:
             - **Branch**: ${{ needs.build.outputs.branch_name }}
 
             ### Packages Included
-            - **Figma Plugin**: `cloudarchitect-kit-figma-plugin.zip`
-            - **PowerPoint Add-in**: `cloudarchitect-kit-powerpoint-addin.zip`
+            - **Figma Plugin**: `cloud-architect-kit-figma-plugin.zip`
+            - **PowerPoint Add-in**: `cloud-architect-kit-powerpoint-addin.zip`
 
             ### Installation - Figma Plugin
-            1. Download `cloudarchitect-kit-figma-plugin.zip`
+            1. Download `cloud-architect-kit-figma-plugin.zip`
             2. Extract the archive
             3. Open Figma Desktop App
             4. Go to Plugins → Development → Import plugin from manifest...
             5. Select the extracted `manifest.json` file
 
             ### Installation - PowerPoint Add-in
-            1. Download `cloudarchitect-kit-powerpoint-addin.zip`
+            1. Download `cloud-architect-kit-powerpoint-addin.zip`
             2. Extract the archive
             3. Deploy to Azure Static Web Apps or local server
             4. Update manifest.xml with your deployment URL
@@ -237,8 +247,8 @@ jobs:
             ### Changes
             This release contains updates to both Figma plugin and PowerPoint add-in distribution files.
           files: |
-            cloudarchitect-kit-figma-plugin.zip
-            cloudarchitect-kit-powerpoint-addin.zip
+            cloud-architect-kit-figma-plugin.zip
+            cloud-architect-kit-powerpoint-addin.zip
           draft: false
           prerelease: false
         env:

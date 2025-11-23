@@ -105,8 +105,8 @@ cp -r "$PPT_DIR/assets" "$DIST_DIR/powerpoint-addin/"
 # Create zip files
 echo "--- Creating release archives..."
 cd "$DIST_DIR"
-(cd figma-plugin && zip -r ../cloudarchitect-kit-figma-plugin.zip .)
-(cd powerpoint-addin && zip -r ../cloudarchitect-kit-powerpoint-addin.zip .)
+(cd figma-plugin && zip -r ../cloud-architect-kit-figma-plugin.zip .)
+(cd powerpoint-addin && zip -r ../cloud-architect-kit-powerpoint-addin.zip .)
 
 echo ""
 echo "=========================================="
@@ -130,7 +130,7 @@ echo "  2. Go to Plugins → Development → Import plugin from manifest..."
 echo "  3. Select: $DIST_DIR/figma-plugin/manifest.json"
 echo ""
 echo "To install PowerPoint add-in:"
-echo "  1. Extract cloudarchitect-kit-powerpoint-addin.zip"
+echo "  1. Extract cloud-architect-kit-powerpoint-addin.zip"
 echo "  2. Deploy to Azure Static Web Apps or local server"
 echo "  3. Sideload manifest.xml in PowerPoint"
 echo ""
