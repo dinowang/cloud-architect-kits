@@ -1,0 +1,23 @@
+{
+  "name": "cloud-architect-kit-google-slides-addon",
+  "version": "1.0.0",
+  "description": "Google Slides Add-on for inserting cloud architecture icons",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js",
+    "push": "clasp push",
+    "deploy": "clasp deploy"
+  },
+  "keywords": [
+    "google-slides",
+    "add-on",
+    "cloud",
+    "architecture",
+    "icons"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@google/clasp": "^2.4.2"
+  }
+}

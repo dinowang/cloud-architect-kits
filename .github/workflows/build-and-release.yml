@@ -57,6 +57,11 @@ jobs:
           cp -r src/prebuild/icons src/powerpoint/add-in/icons
           cp src/prebuild/icons.json src/powerpoint/add-in/icons.json
 
+      - name: Copy icons to Google Slides add-on
+        run: |
+          cp -r src/prebuild/icons src/google-slides/addon/icons
+          cp src/prebuild/icons.json src/google-slides/addon/icons.json
+
       - name: Build Figma plugin
         working-directory: src/figma/plugin
         run: |
@@ -69,10 +74,17 @@ jobs:
           npm ci
           npm run build
 
+      - name: Build Google Slides add-on
+        working-directory: src/google-slides/addon
+        run: |
+          npm ci
+          npm run build
+
       - name: Prepare distribution
         run: |
           mkdir -p dist/figma-plugin
           mkdir -p dist/powerpoint-addin
+          mkdir -p dist/google-slides-addon
 
           # Figma plugin
           cp src/figma/plugin/manifest.json dist/figma-plugin/
@@ -87,6 +99,13 @@ jobs:
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
           cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
+
+          # Google Slides add-on
+          cp src/google-slides/addon/appsscript.json dist/google-slides-addon/
+          cp src/google-slides/addon/Code.gs dist/google-slides-addon/
+          cp src/google-slides/addon/Sidebar.html dist/google-slides-addon/
+          cp src/google-slides/addon/SidebarScript.html dist/google-slides-addon/
+          cp src/google-slides/addon/IconsData.html dist/google-slides-addon/
 
       - name: Check for changes in dist
         id: check_changes
@@ -119,6 +138,7 @@ jobs:
           # Restore current dist with proper structure
           mkdir -p dist/figma-plugin
           mkdir -p dist/powerpoint-addin
+          mkdir -p dist/google-slides-addon
 
           # Figma plugin
           cp src/figma/plugin/manifest.json dist/figma-plugin/
@@ -133,6 +153,13 @@ jobs:
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
           cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
+
+          # Google Slides add-on
+          cp src/google-slides/addon/appsscript.json dist/google-slides-addon/
+          cp src/google-slides/addon/Code.gs dist/google-slides-addon/
+          cp src/google-slides/addon/Sidebar.html dist/google-slides-addon/
+          cp src/google-slides/addon/SidebarScript.html dist/google-slides-addon/
+          cp src/google-slides/addon/IconsData.html dist/google-slides-addon/
 
           # Compare dist directories
           if diff -qr dist/ dist_old/ > /dev/null 2>&1; then
@@ -192,6 +219,11 @@ jobs:
           zip -r ../../cloud-architect-kit-powerpoint-addin.zip .
           cd ../..
 
+          # Create Google Slides add-on archive
+          cd dist/google-slides-addon
+          zip -r ../../cloud-architect-kit-google-slides-addon.zip .
+          cd ../..
+
           echo "Release archives created:"
           ls -lh cloud-architect-kit-*.zip
 
@@ -221,6 +253,7 @@ jobs:
             ### Packages Included
             - **Figma Plugin**: `cloud-architect-kit-figma-plugin.zip`
             - **PowerPoint Add-in**: `cloud-architect-kit-powerpoint-addin.zip`
+            - **Google Slides Add-on**: `cloud-architect-kit-google-slides-addon.zip`
 
             ### Installation - Figma Plugin
             1. Download `cloud-architect-kit-figma-plugin.zip`
@@ -236,6 +269,15 @@ jobs:
             4. Update manifest.xml with your deployment URL
             5. Sideload in PowerPoint
 
+            ### Installation - Google Slides Add-on
+            1. Download `cloud-architect-kit-google-slides-addon.zip`
+            2. Extract the archive
+            3. Install clasp: `npm install -g @google/clasp`
+            4. Login to Google: `clasp login`
+            5. Create project: `clasp create --type standalone --title "Cloud Architect Kits"`
+            6. Push files: `clasp push`
+            7. Open in Google Slides: Extensions → Cloud Architect Kits → Show Icons
+
             ### Icon Library
             - Azure Architecture Icons (~705)
             - Microsoft 365 Icons (~963)
@@ -249,10 +291,11 @@ jobs:
             **Total: ~4,323 icons**
 
             ### Changes
-            This release contains updates to both Figma plugin and PowerPoint add-in distribution files.
+            This release contains updates to Figma plugin, PowerPoint add-in, and Google Slides add-on distribution files.
           files: |
             cloud-architect-kit-figma-plugin.zip
             cloud-architect-kit-powerpoint-addin.zip
+            cloud-architect-kit-google-slides-addon.zip
           draft: false
           prerelease: false
         env:
