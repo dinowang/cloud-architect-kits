@@ -170,9 +170,6 @@ jobs:
           cp src/google-slides/addon/SidebarData.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarPlatform.html dist/google-slides-addon/
 
-          # Draw.io icon libraries
-          cp -r src/drawio/iconlib/dist/* dist/drawio-iconlib/
-
           # Compare dist directories
           if diff -qr dist/ dist_old/ > /dev/null 2>&1; then
             echo "No changes detected in dist folder"
