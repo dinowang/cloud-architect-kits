@@ -1,0 +1,196 @@
+name: Deploy PPT Addin to Azure Static Webapp
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to deploy (e.g., v202511230630)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  check-release:
+    runs-on: ubuntu-latest
+    outputs:
+      has_ppt_asset: ${{ steps.check_asset.outputs.has_ppt_asset }}
+      download_url: ${{ steps.check_asset.outputs.download_url }}
+      release_tag: ${{ steps.get_tag.outputs.release_tag }}
+    
+    steps:
+      - name: Get release tag
+        id: get_tag
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            RELEASE_TAG="${{ inputs.release_tag }}"
+          else
+            RELEASE_TAG="${{ github.event.release.tag_name }}"
+          fi
+          echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
+          echo "Using release tag: $RELEASE_TAG"
+      
+      - name: Check for PowerPoint add-in asset
+        id: check_asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RELEASE_TAG="${{ steps.get_tag.outputs.release_tag }}"
+          
+          echo "Checking release: $RELEASE_TAG"
+          
+          # Get release information
+          RELEASE_INFO=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${{ github.repository }}/releases/tags/$RELEASE_TAG)
+          
+          # Check if PowerPoint add-in asset exists
+          ASSET_URL=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name == "cloudarchitect-kit-powerpoint-addin.zip") | .browser_download_url')
+          
+          if [ -z "$ASSET_URL" ] || [ "$ASSET_URL" == "null" ]; then
+            echo "❌ PowerPoint add-in asset not found in release $RELEASE_TAG"
+            echo "has_ppt_asset=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          echo "✅ Found PowerPoint add-in asset"
+          echo "Download URL: $ASSET_URL"
+          echo "has_ppt_asset=true" >> $GITHUB_OUTPUT
+          echo "download_url=$ASSET_URL" >> $GITHUB_OUTPUT
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: check-release
+    if: needs.check-release.outputs.has_ppt_asset == 'true'
+    environment: production-ppt
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Download PowerPoint add-in
+        run: |
+          echo "Downloading PowerPoint add-in from release..."
+          curl -L -o cloudarchitect-kit-powerpoint-addin.zip "${{ needs.check-release.outputs.download_url }}"
+          
+          echo "Extracting add-in files..."
+          mkdir -p ppt-addin
+          unzip -q cloudarchitect-kit-powerpoint-addin.zip -d ppt-addin
+          
+          echo "Add-in contents:"
+          ls -la ppt-addin/
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "~> 1.0"
+          terraform_wrapper: false
+      
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
+      - name: Terraform Init
+        working-directory: src/powerpoint/terraform
+        run: |
+          # Configure Azure backend for state storage
+          terraform init \
+            -backend-config="resource_group_name=${{ vars.TF_STATE_RESOURCE_GROUP }}" \
+            -backend-config="storage_account_name=${{ vars.TF_STATE_STORAGE_ACCOUNT }}" \
+            -backend-config="container_name=${{ vars.TF_STATE_CONTAINER }}" \
+            -backend-config="key=${{ vars.TF_STATE_KEY }}"
+      
+      - name: Terraform Plan
+        working-directory: src/powerpoint/terraform
+        run: |
+          terraform plan \
+            -var="codename=${{ vars.CODENAME }}" \
+            -var="location=${{ vars.AZURE_LOCATION }}" \
+            -var="swa_location=${{ vars.SWA_LOCATION }}" \
+            -var="environment=${{ vars.ENVIRONMENT }}" \
+            -var="sku_tier=${{ vars.SKU_TIER }}" \
+            -var="sku_size=${{ vars.SKU_SIZE }}" \
+            -out=tfplan
+      
+      - name: Terraform Apply
+        working-directory: src/powerpoint/terraform
+        run: terraform apply -auto-approve tfplan
+      
+      - name: Get Static Web App deployment token
+        id: swa_token
+        working-directory: src/powerpoint/terraform
+        run: |
+          SWA_TOKEN=$(terraform output -raw static_web_app_api_key)
+          echo "::add-mask::$SWA_TOKEN"
+          echo "swa_token=$SWA_TOKEN" >> $GITHUB_OUTPUT
+      
+      - name: Get Static Web App name
+        id: swa_name
+        working-directory: src/powerpoint/terraform
+        run: |
+          SWA_NAME=$(terraform output -raw static_web_app_name)
+          SWA_URL=$(terraform output -raw static_web_app_default_hostname)
+          echo "swa_name=$SWA_NAME" >> $GITHUB_OUTPUT
+          echo "swa_url=$SWA_URL" >> $GITHUB_OUTPUT
+          echo "Static Web App: $SWA_NAME"
+          echo "URL: https://$SWA_URL"
+      
+      - name: Deploy to Azure Static Web Apps
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.swa_token.outputs.swa_token }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "ppt-addin"
+          skip_app_build: true
+          skip_api_build: true
+      
+      - name: Deployment summary
+        run: |
+          echo "## ✅ Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Release Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **Release Tag**: ${{ needs.check-release.outputs.release_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Repository**: ${{ github.repository }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Azure Resources" >> $GITHUB_STEP_SUMMARY
+          echo "- **Static Web App**: ${{ steps.swa_name.outputs.swa_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL**: https://${{ steps.swa_name.outputs.swa_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Update manifest.xml with the new URL" >> $GITHUB_STEP_SUMMARY
+          echo "2. Test the add-in in PowerPoint" >> $GITHUB_STEP_SUMMARY
+          echo "3. Sideload the updated manifest" >> $GITHUB_STEP_SUMMARY
+
+  skip-deployment:
+    runs-on: ubuntu-latest
+    needs: check-release
+    if: needs.check-release.outputs.has_ppt_asset == 'false'
+    
+    steps:
+      - name: No PowerPoint add-in found
+        run: |
+          echo "## ⚠️ Deployment Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Reason" >> $GITHUB_STEP_SUMMARY
+          echo "PowerPoint add-in asset not found in release ${{ needs.check-release.outputs.release_tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Expected Asset" >> $GITHUB_STEP_SUMMARY
+          echo "- Asset name: \`cloudarchitect-kit-powerpoint-addin.zip\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Action Required" >> $GITHUB_STEP_SUMMARY
+          echo "1. Ensure the build workflow created the PowerPoint add-in" >> $GITHUB_STEP_SUMMARY
+          echo "2. Verify the asset exists in the release" >> $GITHUB_STEP_SUMMARY
+          echo "3. Re-run this workflow after the asset is available" >> $GITHUB_STEP_SUMMARY
+          
+          echo "❌ PowerPoint add-in not found in release"
+          exit 0

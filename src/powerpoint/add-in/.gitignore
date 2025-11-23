@@ -1,0 +1,8 @@
+node_modules/
+icons/
+icons.json
+icons-data.*.js
+taskpane-built.html
+taskpane-dev.html
+.DS_Store
+*.log

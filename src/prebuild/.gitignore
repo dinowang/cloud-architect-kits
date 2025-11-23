@@ -1,0 +1,5 @@
+node_modules/
+icons/
+icons.json
+.DS_Store
+*.log

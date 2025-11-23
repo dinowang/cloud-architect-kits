@@ -1,0 +1,16 @@
+{
+  "name": "cloudarchitect-prebuild",
+  "version": "1.0.0",
+  "description": "Pre-build icons for Cloud Architect Kit",
+  "main": "index.js",
+  "scripts": {
+    "build": "node process-icons.js"
+  },
+  "keywords": [
+    "icons",
+    "cloud",
+    "architecture"
+  ],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 16px;
+      background: #fff;
+    }
+    
+    .search-container {
+      margin-bottom: 16px;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 10;
+      padding-bottom: 8px;
+    }
+    
+    #search {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+    
+    #search:focus {
+      border-color: #18a0fb;
+    }
+    
+    .size-control {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border-radius: 4px;
+    }
+    
+    .size-control label {
+      font-size: 12px;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    #icon-size {
+      width: 70px;
+      padding: 4px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+      outline: none;
+    }
+    
+    #icon-size:focus {
+      border-color: #18a0fb;
+    }
+    
+    .size-presets {
+      display: flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+    
+    .size-preset-btn {
+      padding: 4px 8px;
+      font-size: 11px;
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .size-preset-btn:hover {
+      background: #18a0fb;
+      color: #fff;
+      border-color: #18a0fb;
+    }
+    
+    .icons-list {
+      max-height: 500px;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .source-section {
+      margin-bottom: 32px;
+    }
+    
+    .source-header {
+      font-size: 18px;
+      font-weight: 700;
+      color: #18a0fb;
+      margin-bottom: 16px;
+      padding: 8px 12px;
+      background: #f0f8ff;
+      border-radius: 6px;
+      border-left: 4px solid #18a0fb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    
+    .source-header-title {
+      flex-grow: 1;
+    }
+    
+    .source-header-count {
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      margin-left: 12px;
+    }
+    
+    .category-section {
+      margin-bottom: 24px;
+      margin-left: 16px;
+    }
+    
+    .category-header {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid #ddd;
+    }
+    
+    .icon-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      margin-bottom: 4px;
+    }
+    
+    .icon-item:hover {
+      background: #f0f8ff;
+      border-left: 3px solid #18a0fb;
+      padding-left: 9px;
+    }
+    
+    .icon-item-image {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .icon-item-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    
+    .icon-item-name {
+      font-size: 14px;
+      color: #333;
+      flex-grow: 1;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #666;
+    }
+    
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Search cloud architect icons..." autocomplete="off">
+    <div class="size-control">
+      <label for="icon-size">Icon Size:</label>
+      <input type="number" id="icon-size" value="64" min="16" max="512" step="16">
+      <span style="font-size: 12px; color: #999;">px</span>
+      <div class="size-presets">
+        <button class="size-preset-btn" data-size="32">32</button>
+        <button class="size-preset-btn" data-size="64">64</button>
+        <button class="size-preset-btn" data-size="128">128</button>
+        <button class="size-preset-btn" data-size="256">256</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="icons-container" class="icons-list">
+    <div class="loading">Loading icons...</div>
+  </div>
+
+  <script src="/*ICONS_JS_PATH*/"></script>
+  <script>
+    let allIcons = [];
+    let organizedIcons = {};
+    
+    let sourceIconCounts = {};
+    
+    async function loadIcons() {
+      allIcons = window.iconsData || [];
+      
+      // Group icons by source, then by category
+      organizedIcons = {};
+      sourceIconCounts = {};
+      
+      allIcons.forEach(icon => {
+        if (!organizedIcons[icon.source]) {
+          organizedIcons[icon.source] = {};
+          sourceIconCounts[icon.source] = 0;
+        }
+        if (!organizedIcons[icon.source][icon.category]) {
+          organizedIcons[icon.source][icon.category] = [];
+        }
+        organizedIcons[icon.source][icon.category].push(icon);
+        sourceIconCounts[icon.source]++;
+      });
+      
+      renderIcons();
+    }
+    
+    let renderTimeout = null;
+    let lastQuery = '';
+    
+    function renderIcons(query = '') {
+      // Debounce rendering for better performance
+      if (renderTimeout) clearTimeout(renderTimeout);
+      
+      renderTimeout = setTimeout(() => {
+        const container = document.getElementById('icons-container');
+        container.innerHTML = '';
+        
+        const sources = Object.keys(organizedIcons).sort();
+        let totalShown = 0;
+        const MAX_INITIAL_ICONS = query ? 500 : 100; // Limit initial render
+        
+        sources.forEach(source => {
+          if (totalShown >= MAX_INITIAL_ICONS && !query) return;
+          
+          const categories = organizedIcons[source];
+          const categoryNames = Object.keys(categories).sort();
+          let sourceShown = false;
+          let sourceSection = null;
+          let sourceFilteredCount = 0;
+          
+          categoryNames.forEach(category => {
+            if (totalShown >= MAX_INITIAL_ICONS && !query) return;
+            
+            const icons = categories[category];
+            
+            // Filter icons based on search query
+            let filteredIcons = icons;
+            let sourceMatches = false;
+            let categoryMatches = false;
+            
+            if (query) {
+              const lowerQuery = query.toLowerCase();
+              sourceMatches = source.toLowerCase().includes(lowerQuery);
+              categoryMatches = category.toLowerCase().includes(lowerQuery);
+              
+              if (!sourceMatches && !categoryMatches) {
+                filteredIcons = icons.filter(icon => 
+                  icon.name.toLowerCase().includes(lowerQuery)
+                );
+              }
+            }
+            
+            // Show category if source/category matches or has matching icons
+            if (!query || sourceMatches || categoryMatches || filteredIcons.length > 0) {
+              if (!sourceShown) {
+                sourceSection = document.createElement('div');
+                sourceSection.className = 'source-section';
+                
+                const sourceHeader = document.createElement('div');
+                sourceHeader.className = 'source-header';
+                
+                const sourceTitle = document.createElement('div');
+                sourceTitle.className = 'source-header-title';
+                sourceTitle.textContent = source;
+                sourceHeader.appendChild(sourceTitle);
+                
+                const sourceCount = document.createElement('div');
+                sourceCount.className = 'source-header-count';
+                sourceCount.dataset.source = source;
+                sourceHeader.appendChild(sourceCount);
+                
+                sourceSection.appendChild(sourceHeader);
+                
+                sourceShown = true;
+              }
+              
+              const categorySection = document.createElement('div');
+              categorySection.className = 'category-section';
+              
+              const categoryHeader = document.createElement('div');
+              categoryHeader.className = 'category-header';
+              categoryHeader.textContent = category;
+              categorySection.appendChild(categoryHeader);
+              
+              // Show all icons if source/category matches, otherwise show filtered icons
+              const iconsToShow = (sourceMatches || categoryMatches) ? icons : filteredIcons;
+              sourceFilteredCount += iconsToShow.length;
+              
+              // Use document fragment for better performance
+              const fragment = document.createDocumentFragment();
+              
+              iconsToShow.forEach((icon, idx) => {
+                if (totalShown >= MAX_INITIAL_ICONS && !query) return;
+                
+                const item = document.createElement('div');
+                item.className = 'icon-item';
+                
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'icon-item-image';
+                
+                const img = document.createElement('img');
+                // Lazy load images for better performance
+                img.dataset.src = `data:image/svg+xml;base64,${icon.svg}`;
+                img.alt = icon.name;
+                img.loading = 'lazy';
+                
+                // Load image on intersection
+                if (idx < 20 || query) {
+                  img.src = img.dataset.src;
+                } else {
+                  setTimeout(() => {
+                    if (img.dataset.src) img.src = img.dataset.src;
+                  }, 100);
+                }
+                
+                imageContainer.appendChild(img);
+                
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'icon-item-name';
+                nameDiv.textContent = icon.name;
+                
+                item.appendChild(imageContainer);
+                item.appendChild(nameDiv);
+                
+                item.addEventListener('click', () => {
+                  const iconSize = parseInt(document.getElementById('icon-size').value) || 64;
+                  const svgData = atob(icon.svg);
+                  parent.postMessage({
+                    pluginMessage: {
+                      type: 'insert-icon',
+                      svgData: svgData,
+                      name: icon.name,
+                      size: iconSize
+                    }
+                  }, '*');
+                });
+                
+                fragment.appendChild(item);
+                totalShown++;
+              });
+              
+              categorySection.appendChild(fragment);
+              sourceSection.appendChild(categorySection);
+            }
+          });
+          
+          if (sourceShown) {
+            // Update source count display
+            const countElement = sourceSection.querySelector('.source-header-count');
+            const totalCount = sourceIconCounts[source];
+            if (query && sourceFilteredCount !== totalCount) {
+              countElement.textContent = `${sourceFilteredCount} / ${totalCount}`;
+            } else {
+              countElement.textContent = `${totalCount}`;
+            }
+            
+            container.appendChild(sourceSection);
+          }
+        });
+        
+        if (totalShown === 0) {
+          container.innerHTML = '<div class="no-results">No icons found</div>';
+        } else if (totalShown === MAX_INITIAL_ICONS && !query) {
+          const loadMore = document.createElement('div');
+          loadMore.style.cssText = 'text-align: center; padding: 20px; color: #666; font-size: 12px;';
+          loadMore.textContent = `Showing first ${MAX_INITIAL_ICONS} icons. Use search to find more.`;
+          container.appendChild(loadMore);
+        }
+        
+        lastQuery = query;
+      }, query ? 300 : 0); // Debounce search input
+    }
+    
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', (e) => {
+      const query = e.target.value;
+      // Scroll to top when search query changes
+      const container = document.getElementById('icons-container');
+      container.scrollTop = 0;
+      renderIcons(query);
+    });
+    
+    // Size preset buttons
+    document.querySelectorAll('.size-preset-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const size = e.target.dataset.size;
+        document.getElementById('icon-size').value = size;
+      });
+    });
+    
+    loadIcons();
+  </script>
+</body>
+</html>

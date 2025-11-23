@@ -4,11 +4,13 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-SRC_DIR="$PROJECT_ROOT/src/figma-cloudarchitect"
+PREBUILD_DIR="$PROJECT_ROOT/src/prebuild"
+FIGMA_DIR="$PROJECT_ROOT/src/figma/plugin"
+PPT_DIR="$PROJECT_ROOT/src/powerpoint/add-in"
 DIST_DIR="$PROJECT_ROOT/dist"
 
 echo "=========================================="
-echo "Figma Cloud Architect - Full Build"
+echo "Cloud Architect Kits - Full Build"
 echo "=========================================="
 echo ""
 
@@ -48,47 +50,63 @@ echo "--- Downloading Lobe icons..."
 "$SCRIPT_DIR/download-lobe-icons.sh"
 echo ""
 
-# Step 2: Install dependencies
-echo "==> Step 2: Installing dependencies..."
-cd "$SRC_DIR"
+# Step 2: Prebuild icons
+echo "==> Step 2: Pre-building icons..."
+cd "$PREBUILD_DIR"
+npm run build
+echo ""
+
+# Step 3: Copy icons to plugins
+echo "==> Step 3: Copying icons to plugins..."
+echo "--- Copying to Figma plugin..."
+cp -r "$PREBUILD_DIR/icons" "$FIGMA_DIR/icons"
+cp "$PREBUILD_DIR/icons.json" "$FIGMA_DIR/icons.json"
+
+echo "--- Copying to PowerPoint add-in..."
+cp -r "$PREBUILD_DIR/icons" "$PPT_DIR/icons"
+cp "$PREBUILD_DIR/icons.json" "$PPT_DIR/icons.json"
+echo ""
+
+# Step 4: Install dependencies and build Figma plugin
+echo "==> Step 4: Building Figma plugin..."
+cd "$FIGMA_DIR"
 if [ ! -d "node_modules" ]; then
     npm install
-else
-    echo "Dependencies already installed, skipping..."
 fi
+npm run build
 echo ""
 
-# Step 3: Build the plugin
-echo "==> Step 3: Building Figma plugin..."
-(cd $SRC_DIR && npm run build)
+# Step 5: Build PowerPoint add-in
+echo "==> Step 5: Building PowerPoint add-in..."
+cd "$PPT_DIR"
+if [ ! -d "node_modules" ]; then
+    npm install
+fi
+npm run build
 echo ""
 
-# Step 4: Prepare distribution
-echo "==> Step 4: Preparing distribution..."
-mkdir -p "$DIST_DIR"
+# Step 6: Prepare distribution
+echo "==> Step 6: Preparing distribution..."
+mkdir -p "$DIST_DIR/figma-plugin"
+mkdir -p "$DIST_DIR/powerpoint-addin"
 
-# Copy necessary files to dist
-echo "--- Copying manifest.json..."
-cp "$SRC_DIR/manifest.json" "$DIST_DIR/"
+echo "--- Packaging Figma plugin..."
+cp "$FIGMA_DIR/manifest.json" "$DIST_DIR/figma-plugin/"
+cp "$FIGMA_DIR/code.js" "$DIST_DIR/figma-plugin/"
+cp "$FIGMA_DIR/ui-built.html" "$DIST_DIR/figma-plugin/"
 
-echo "--- Copying built files..."
-cp "$SRC_DIR/code.js" "$DIST_DIR/"
-cp "$SRC_DIR/ui-built.html" "$DIST_DIR/"
+echo "--- Packaging PowerPoint add-in..."
+cp "$PPT_DIR/manifest.xml" "$DIST_DIR/powerpoint-addin/"
+cp "$PPT_DIR/taskpane-built.html" "$DIST_DIR/powerpoint-addin/"
+cp "$PPT_DIR/commands.html" "$DIST_DIR/powerpoint-addin/"
+cp "$PPT_DIR/staticwebapp.config.json" "$DIST_DIR/powerpoint-addin/"
+cp -r "$PPT_DIR/assets" "$DIST_DIR/powerpoint-addin/"
 
-# echo "--- Copying icons.json..."
-# if [ -f "$SRC_DIR/icons.json" ]; then
-#     cp "$SRC_DIR/icons.json" "$DIST_DIR/"
-# fi
-
-# echo "--- Copying icons directory..."
-# if [ -d "$SRC_DIR/icons" ]; then
-#     cp -r "$SRC_DIR/icons" "$DIST_DIR/"
-# fi
-
-# Copy documentation
-# echo "--- Copying documentation..."
-# cp "$PROJECT_ROOT/README.md" "$DIST_DIR/"
-# cp "$PROJECT_ROOT/INSTALL.md" "$DIST_DIR/"
+# Create zip files
+echo "--- Creating release archives..."
+cd "$DIST_DIR"
+(cd figma-plugin && zip -r ../cloudarchitect-kit-figma-plugin.zip .)
+(cd powerpoint-addin && zip -r ../cloudarchitect-kit-powerpoint-addin.zip .)
 
 echo ""
 echo "=========================================="
@@ -97,10 +115,22 @@ echo "=========================================="
 echo ""
 echo "Distribution files are in: $DIST_DIR"
 echo ""
-ls -lh "$DIST_DIR"
+echo "Figma Plugin:"
+ls -lh "$DIST_DIR/figma-plugin"
 echo ""
-echo "To install in Figma:"
+echo "PowerPoint Add-in:"
+ls -lh "$DIST_DIR/powerpoint-addin"
+echo ""
+echo "Release archives:"
+ls -lh "$DIST_DIR"/*.zip
+echo ""
+echo "To install Figma plugin:"
 echo "  1. Open Figma Desktop App"
 echo "  2. Go to Plugins → Development → Import plugin from manifest..."
-echo "  3. Select: $DIST_DIR/manifest.json"
+echo "  3. Select: $DIST_DIR/figma-plugin/manifest.json"
+echo ""
+echo "To install PowerPoint add-in:"
+echo "  1. Extract cloudarchitect-kit-powerpoint-addin.zip"
+echo "  2. Deploy to Azure Static Web Apps or local server"
+echo "  3. Sideload manifest.xml in PowerPoint"
 echo ""

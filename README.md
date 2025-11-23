@@ -1,202 +1,207 @@
-# Figma Cloud Architect Icons Plugin
+# Cloud Architect Kits
 
-A Figma plugin that allows you to quickly insert cloud architecture and technology icons into your designs.
+A comprehensive toolkit bringing **4,300+ professional cloud architecture and technology icons** directly into your favorite design and presentation tools.
 
-## Features
+## 🎯 What's Included
 
-- 🔍 Search through 4300+ icons from multiple sources
-- 📐 Customizable icon size (default 64px, maintains aspect ratio)
-- 🎨 Organized by source and category
-- ⚡ Fast keyword search by icon name, source, or category
-- 🎯 One-click icon insertion
-- 📊 Real-time icon count display (filtered/total)
-- 🔝 Sticky source headers for easy navigation
-- 📦 Automated icon download scripts
+- **🎨 [Figma Plugin](./src/figma)** - Insert icons into Figma designs
+- **📊 [PowerPoint Add-in](./src/powerpoint)** - Add icons to PowerPoint presentations
+- **🔧 Unified Icon System** - Consistent library across all platforms
+- **☁️ Azure Deployment** - Host PowerPoint add-in on Azure Static Web Apps
 
-## Installation
+## ✨ Icon Library
 
-### Prerequisites
+### 4,323 Professional Icons From:
 
-- Node.js (v14 or higher)
-- npm
+| Source | Count | Description |
+|--------|-------|-------------|
+| **Azure Architecture** | ~705 | Official Azure service icons |
+| **Microsoft 365** | ~963 | Office and productivity icons |
+| **Gilbarbara Logos** | ~1,839 | Technology company logos |
+| **Lobe Icons** | ~723 | Machine learning icons |
+| **Kubernetes** | ~39 | Container orchestration icons |
+| **Dynamics 365** | ~38 | Business application icons |
+| **Power Platform** | ~9 | Low-code platform icons |
+| **Microsoft Entra** | ~7 | Identity and access icons |
 
-### Setup
+## 🚀 Quick Start
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+### For Figma Users
 
-2. Build the plugin:
-   ```bash
-   npm run build
-   ```
+```bash
+cd src/figma/plugin
+npm install
+npm run build
+```
 
-3. Load the plugin in Figma:
-   - Open Figma Desktop App
-   - Go to Menu > Plugins > Development > Import plugin from manifest...
-   - Select the `manifest.json` file from this directory
+Then import `manifest.json` in Figma Desktop App.
 
-## Development
+📖 [Detailed Figma Instructions →](./src/figma/INSTALL.md)
 
-### Build Process
+### For PowerPoint Users
 
-The plugin build process:
-1. Downloads icons from Microsoft's official repositories
-2. Processes and normalizes all SVG icons (removes fixed width/height, ensures viewBox)
-3. Indexes icons by source and category
-4. Embeds icons into the UI HTML file as base64
-5. Compiles TypeScript code
+```bash
+cd src/powerpoint/add-in
+npm install
+npm run build
+npm run serve
+```
 
-### Commands
+Then sideload `manifest.xml` in PowerPoint.
 
-- `./scripts/build-and-release.sh` - **Complete workflow** (download all icons, install dependencies, build, create distribution)
-- `npm run build` - Full build (process icons, build UI, compile code)
-- `npm run watch` - Watch mode for TypeScript changes
-- `npm run verify` - Verify icons integrity
+📖 [Detailed PowerPoint Instructions →](./src/powerpoint/INSTALL.md)
 
-### Download Scripts
+## ✨ Features
 
-- `./scripts/download-azure-icons.sh` - Download Azure Architecture Icons
-- `./scripts/download-m365-icons.sh` - Download Microsoft 365 Icons
-- `./scripts/download-d365-icons.sh` - Download Dynamics 365 Icons
-- `./scripts/download-entra-icons.sh` - Download Microsoft Entra Icons
-- `./scripts/download-powerplatform-icons.sh` - Download Power Platform Icons
-- `./scripts/download-kubernetes-icons.sh` - Download Kubernetes Icons
-- `./scripts/download-gilbarbara-icons.sh` - Download Gilbarbara Logos
-- `./scripts/download-lobe-icons.sh` - Download Lobe Icons
+- **🔍 Smart Search** - Filter by name, source, or category
+- **📐 Aspect Ratio Preserved** - Icons maintain proper proportions
+- **⚡ Fast Performance** - Optimized for quick insertion
+- **📊 Live Filtering** - Real-time icon count updates
+- **🔝 Smart Navigation** - Sticky headers keep you oriented
+- **🎯 One-Click Insert** - Intuitive workflow
+- **48x48 Previews** - Clear icon thumbnails
 
-### Automated Build (GitHub Actions)
+## 🏗️ Architecture
 
-The repository includes a GitHub Actions workflow for manual builds with two stages:
-
-**Build Stage:**
-- Downloads all icon sources
-- Builds the plugin
-- Creates distribution packages
-- **Smart change detection**: Compares with previous build
-- Commits to timestamped CI branch (format: `YYYYMMDDHHmm-ci`) only if changes detected
-- Uploads build artifacts (retained for 30 days) only if changes detected
-
-**Release Stage** (only if changes detected):
-- Downloads build artifact
-- Creates `dist.zip` archive
-- **Creates GitHub Release** (format: `vYYYYMMDDHHmm`) with `dist.zip`
-
-Trigger: Go to Actions → Build and Release → Run workflow
-
-**Note**: If no changes are detected in `./dist/`, the workflow will skip creating the CI branch, uploading artifacts, and the entire release stage.
-
-**Permissions**: The workflow requires `contents: write` permission to create branches and push changes. This is configured in the workflow file. For more details, see [docs/20251122-11-GITHUB-ACTIONS-PERMISSIONS.md](docs/20251122-11-GITHUB-ACTIONS-PERMISSIONS.md).
-
-### Project Structure
+### Unified Icon Processing
 
 ```
-figma-azure/
-├── manifest.json          # Figma plugin manifest
+┌─────────────────────────────────────────┐
+│  Icon Sources (Official Repositories)   │
+└────────────────┬────────────────────────┘
+                 │
+          ┌──────▼──────┐
+          │   Prebuild   │  ← Process once
+          │   System     │     Normalize
+          └──────┬──────┘     Index
+                 │
+       ┌─────────┴─────────┐
+       │                   │
+  ┌────▼─────┐      ┌─────▼──────┐
+  │  Figma   │      │ PowerPoint │
+  │  Plugin  │      │  Add-in    │
+  └──────────┘      └────────────┘
+```
+
+**Benefits:**
+- ✅ **Consistency** - Same icons across all platforms
+- ⚡ **Efficiency** - Icons processed once, used everywhere
+- 🔄 **Easy Updates** - Update icons in one place
+- 📦 **Maintainability** - Single source of truth
+
+## 📦 Project Structure
+
+```
+cloudarchitect-kits/
+├── README.md                  # This file
+├── INSTALL.md                 # Installation index
 ├── src/
-│   └── figma-cloudarchitect/
-│       ├── code.ts           # Plugin backend code
-│       ├── ui.html           # UI template
-│       ├── ui-built.html     # Built UI (production)
-│       ├── ui-dev.html       # Built UI (development)
-│       ├── icons-data.*.js   # Icons data with hash
-│       ├── process-icons.js  # Icon processing script
-│       ├── build.js          # UI build script
-│       └── icons/            # Processed icon files
-├── temp/                  # Downloaded icon sources
-│   ├── azure-icons/       # Azure Architecture Icons
-│   ├── m365-icons/        # Microsoft 365 Icons
-│   ├── d365-icons/        # Dynamics 365 Icons
-│   ├── entra-icons/       # Microsoft Entra Icons
-│   ├── powerplatform-icons/ # Power Platform Icons
-│   ├── kubernetes-icons/  # Kubernetes Icons
-│   ├── gilbarbara-icons/  # Gilbarbara logos
-│   └── lobe-icons/        # Lobe Icons
-├── scripts/               # Download scripts
-├── dist/                  # Distribution files
-└── docs/                  # Documentation
+│   ├── prebuild/              # Unified icon processing
+│   │   ├── process-icons.js  # Icon normalization
+│   │   └── icons/ + icons.json (generated)
+│   │
+│   ├── figma/                 # Figma plugin
+│   │   ├── README.md         # Plugin docs
+│   │   ├── INSTALL.md        # Install guide
+│   │   └── plugin/           # Plugin code
+│   │       ├── manifest.json # Figma manifest
+│   │       ├── code.ts       # Backend logic
+│   │       └── ui.html       # UI interface
+│   │
+│   └── powerpoint/            # PowerPoint add-in
+│       ├── README.md         # Add-in docs
+│       ├── INSTALL.md        # Install guide
+│       ├── add-in/           # Add-in code
+│       │   ├── manifest.xml  # Office manifest
+│       │   └── taskpane.*    # UI files
+│       └── terraform/        # Azure infrastructure
+│
+├── scripts/                   # Download & build scripts
+├── temp/                      # Downloaded sources
+└── dist/                      # Release packages
 ```
 
-## Icon Sources
+## 🛠️ Development
 
-### Azure Architecture Icons
-- **URL:** https://learn.microsoft.com/en-us/azure/architecture/icons/
-- **Count:** ~705 icons
-- **Format:** SVG
-- **Categories:** Compute, Networking, Storage, Databases, AI + ML, etc.
+### Full Build Process
 
-### Microsoft 365 Icons
-- **URL:** https://learn.microsoft.com/en-us/microsoft-365/solutions/architecture-icons-templates
-- **Count:** ~963 icons
-- **Format:** SVG
-- **Categories:** Teams, SharePoint, Office apps, etc.
+```bash
+# Download icons + Build everything
+./scripts/build-and-release.sh
+```
 
-### Dynamics 365 Icons
-- **URL:** https://learn.microsoft.com/en-us/dynamics365/get-started/icons
-- **Count:** ~38 icons
-- **Format:** SVG
-- **Categories:** CRM, ERP, Business Central, etc.
+### Individual Components
 
-### Power Platform Icons
-- **URL:** https://learn.microsoft.com/en-us/power-platform/
-- **Count:** ~9 icons
-- **Format:** SVG
-- **Categories:** Power BI, Power Apps, Power Automate, etc.
+```bash
+# 1. Prebuild icons
+cd src/prebuild
+npm run build
 
-### Microsoft Entra Icons
-- **URL:** https://learn.microsoft.com/en-us/entra/
-- **Count:** ~7 icons
-- **Format:** SVG
-- **Categories:** Identity and access management
+# 2. Build Figma plugin
+cd ../figma/plugin
+npm run build
 
-### Kubernetes Icons
-- **URL:** https://github.com/kubernetes/community
-- **Count:** ~39 icons
-- **Format:** SVG
-- **Categories:** Container orchestration and cloud-native
+# 3. Build PowerPoint add-in
+cd ../../powerpoint/add-in
+npm run build
+```
 
-### Gilbarbara Logos
-- **URL:** https://github.com/gilbarbara/logos
-- **Count:** ~1839 icons
-- **Format:** SVG
-- **Categories:** Technology company logos and brand icons
+## 📚 Documentation
 
-### Lobe Icons
-- **URL:** https://github.com/lobehub/lobe-icons
-- **Count:** ~723 icons
-- **Format:** SVG
-- **Categories:** Modern icon library for applications
+- **[Installation Guide](./INSTALL.md)** - Choose your platform
+- **[Figma Plugin](./src/figma/README.md)** - Figma-specific docs
+- **[PowerPoint Add-in](./src/powerpoint/README.md)** - PowerPoint-specific docs
+- **[Prebuild System](./src/prebuild/README.md)** - Icon processing docs
 
-## Usage
+## 🎯 Use Cases
 
-1. Open Figma and run the plugin (Plugins > Development > Cloud Architect Icons)
-2. Browse icons organized by source (Azure, Microsoft 365, Dynamics 365, Entra, Power Platform, Kubernetes, Gilbarbara, Lobe)
-3. Use the search box to find icons by name, source, or category
-4. Adjust the icon size (16-512px) using the size control or preset buttons (32, 64, 128, 256)
-5. Click on an icon to insert it into your canvas at the specified size (maintains aspect ratio)
-6. Icons are displayed at 48x48px in the selection list for better browsing
-7. Source headers show real-time icon counts (filtered/total) and stay visible while scrolling
+### For Designers (Figma)
 
-## License
+- **System Diagrams** - Architecture documentation
+- **Design Systems** - Consistent icon libraries
+- **UI/UX Design** - Cloud service representations
+- **Wireframes** - Technology stack visualization
+
+### For Presenters (PowerPoint)
+
+- **Architecture Presentations** - Technical diagrams
+- **Executive Briefings** - High-level overviews
+- **Training Materials** - Educational content
+- **Documentation** - Technical specifications
+
+## 🔧 Requirements
+
+### Figma Plugin
+
+- **Node.js** 14+
+- **Figma Desktop App** (for development)
+- **npm**
+
+### PowerPoint Add-in
+
+- **Node.js** 14+
+- **PowerPoint** (Office 365 or 2016+)
+- **npm**
+- **Azure subscription** (optional, for deployment)
+
+## 📄 License
 
 ISC
 
-## UI Features
+## 🤝 Contributing
 
-- **Icon Preview**: Icons displayed at 48x48px in selection list
-- **Size Control**: Adjustable output size (16-512px) with quick preset buttons
-- **Smart Scaling**: Icons maintain aspect ratio based on longest side
-- **Sticky Headers**: Source headers stay visible while scrolling for easy navigation
-- **Icon Count Display**: Shows filtered/total icon count per source
-- **Auto Scroll**: Automatically scrolls to top when search query changes
-- **Fast Search**: Debounced search with optimized rendering for 4300+ icons
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-## Notes
+## 📞 Support
 
-- All icons are embedded in the plugin for offline use
-- No network access required after initial build
-- Only SVG format icons are used (PNG files are excluded)
-- Icons are organized hierarchically: Source → Category → Individual Icons
-- Total icon count: ~4,323 icons from 8 different sources
-- Built UI file size: ~52MB (includes all embedded icons)
+- **Issues**: GitHub Issues
+- **Documentation**: See individual plugin READMEs
+- **Questions**: Create a Discussion
+
+---
+
+**Made with ❤️ for cloud architects, designers, and presenters**

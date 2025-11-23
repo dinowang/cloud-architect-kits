@@ -31,47 +31,60 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-          cache-dependency-path: src/figma-cloudarchitect/package-lock.json
 
-      - name: Download Azure icons
-        run: ./scripts/download-azure-icons.sh
+      - name: Download icon sources
+        run: |
+          ./scripts/download-azure-icons.sh
+          ./scripts/download-m365-icons.sh
+          ./scripts/download-d365-icons.sh
+          ./scripts/download-entra-icons.sh
+          ./scripts/download-powerplatform-icons.sh
+          ./scripts/download-kubernetes-icons.sh
+          ./scripts/download-gilbarbara-icons.sh
+          ./scripts/download-lobe-icons.sh
 
-      - name: Download Microsoft 365 icons
-        run: ./scripts/download-m365-icons.sh
-
-      - name: Download Dynamics 365 icons
-        run: ./scripts/download-d365-icons.sh
-
-      - name: Download Entra icons
-        run: ./scripts/download-entra-icons.sh
-
-      - name: Download Power Platform icons
-        run: ./scripts/download-powerplatform-icons.sh
-
-      - name: Download Kubernetes icons
-        run: ./scripts/download-kubernetes-icons.sh
-
-      - name: Download Gilbarbara icons
-        run: ./scripts/download-gilbarbara-icons.sh
-
-      - name: Download Lobe icons
-        run: ./scripts/download-lobe-icons.sh
-
-      - name: Install dependencies
-        working-directory: src/figma-cloudarchitect
-        run: npm ci
-
-      - name: Build plugin
-        working-directory: src/figma-cloudarchitect
+      - name: Prebuild icons
+        working-directory: src/prebuild
         run: npm run build
+
+      - name: Copy icons to Figma plugin
+        run: |
+          cp -r src/prebuild/icons src/figma/plugin/icons
+          cp src/prebuild/icons.json src/figma/plugin/icons.json
+
+      - name: Copy icons to PowerPoint add-in
+        run: |
+          cp -r src/prebuild/icons src/powerpoint/add-in/icons
+          cp src/prebuild/icons.json src/powerpoint/add-in/icons.json
+
+      - name: Build Figma plugin
+        working-directory: src/figma/plugin
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build PowerPoint add-in
+        working-directory: src/powerpoint/add-in
+        run: |
+          npm ci
+          npm run build
 
       - name: Prepare distribution
         run: |
-          mkdir -p dist
-          cp src/figma-cloudarchitect/manifest.json dist/
-          cp src/figma-cloudarchitect/code.js dist/
-          cp src/figma-cloudarchitect/ui-built.html dist/
+          mkdir -p dist/figma-plugin
+          mkdir -p dist/powerpoint-addin
+          
+          # Figma plugin
+          cp src/figma/plugin/manifest.json dist/figma-plugin/
+          cp src/figma/plugin/code.js dist/figma-plugin/
+          cp src/figma/plugin/ui-built.html dist/figma-plugin/
+          
+          # PowerPoint add-in
+          cp src/powerpoint/add-in/manifest.xml dist/powerpoint-addin/
+          cp src/powerpoint/add-in/taskpane-built.html dist/powerpoint-addin/
+          cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
+          cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
+          cp -r src/powerpoint/add-in/assets dist/powerpoint-addin/
 
       - name: Check for changes in dist
         id: check_changes
@@ -137,7 +150,7 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: figma-cloudarchitect-${{ env.BRANCH_NAME }}
+          name: cloudarchitect-kit-${{ env.BRANCH_NAME }}
           path: dist/
           retention-days: 30
 
@@ -150,16 +163,23 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: figma-cloudarchitect-${{ needs.build.outputs.branch_name }}
+          name: cloudarchitect-kit-${{ needs.build.outputs.branch_name }}
           path: dist/
 
-      - name: Create release archive
+      - name: Create release archives
         run: |
-          cd dist
-          zip -r ../dist.zip .
-          cd ..
-          echo "Release archive created: dist.zip"
-          ls -lh dist.zip
+          # Create Figma plugin archive
+          cd dist/figma-plugin
+          zip -r ../../cloudarchitect-kit-figma-plugin.zip .
+          cd ../..
+          
+          # Create PowerPoint add-in archive
+          cd dist/powerpoint-addin
+          zip -r ../../cloudarchitect-kit-powerpoint-addin.zip .
+          cd ../..
+          
+          echo "Release archives created:"
+          ls -lh cloudarchitect-kit-*.zip
 
       - name: Generate release tag
         id: release_tag
@@ -175,25 +195,50 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: Release ${{ env.RELEASE_TAG }}
+          name: Cloud Architect Kit ${{ env.RELEASE_TAG }}
           body: |
-            ## Figma Cloud Architect Plugin - Build ${{ needs.build.outputs.branch_name }}
+            ## Cloud Architect Icons Kit - Build ${{ needs.build.outputs.branch_name }}
 
             ### Build Information
             - **Build Time**: ${{ needs.build.outputs.branch_name }}
             - **Commit**: ${{ github.sha }}
             - **Branch**: ${{ needs.build.outputs.branch_name }}
 
-            ### Installation
-            1. Download `dist.zip`
+            ### Packages Included
+            - **Figma Plugin**: `cloudarchitect-kit-figma-plugin.zip`
+            - **PowerPoint Add-in**: `cloudarchitect-kit-powerpoint-addin.zip`
+
+            ### Installation - Figma Plugin
+            1. Download `cloudarchitect-kit-figma-plugin.zip`
             2. Extract the archive
             3. Open Figma Desktop App
             4. Go to Plugins → Development → Import plugin from manifest...
             5. Select the extracted `manifest.json` file
 
+            ### Installation - PowerPoint Add-in
+            1. Download `cloudarchitect-kit-powerpoint-addin.zip`
+            2. Extract the archive
+            3. Deploy to Azure Static Web Apps or local server
+            4. Update manifest.xml with your deployment URL
+            5. Sideload in PowerPoint
+
+            ### Icon Library
+            - Azure Architecture Icons (~705)
+            - Microsoft 365 Icons (~963)
+            - Dynamics 365 Icons (~38)
+            - Microsoft Entra Icons (~7)
+            - Power Platform Icons (~9)
+            - Kubernetes Icons (~39)
+            - Gilbarbara Logos (~1839)
+            - Lobe Icons (~723)
+            
+            **Total: ~4,323 icons**
+
             ### Changes
-            This release contains updates to the plugin distribution files.
-          files: dist.zip
+            This release contains updates to both Figma plugin and PowerPoint add-in distribution files.
+          files: |
+            cloudarchitect-kit-figma-plugin.zip
+            cloudarchitect-kit-powerpoint-addin.zip
           draft: false
           prerelease: false
         env:
