@@ -174,6 +174,29 @@ Downloads Lobe Icons set.
 
 ---
 
+### download-fabric-icons.sh
+
+Downloads Microsoft Fabric icon set.
+
+**Usage:**
+```bash
+./scripts/download-fabric-icons.sh
+```
+
+**Statistics:**
+- SVG files: ~80+
+- Resolution: 48x48 color icons
+
+**Included Services:**
+- Fabric workspace icons
+- Data Factory
+- Synapse Analytics
+- Data Lake
+- Power BI integration
+- And more data analytics services
+
+---
+
 ## Output Locations
 
 All download scripts save files to the `temp/` directory:
@@ -185,6 +208,7 @@ temp/
 ├── d365-icons/
 ├── entra-icons/
 ├── powerplatform-icons/
+├── fabric-icons/
 ├── kubernetes-icons/
 ├── gilbarbara-icons/
 └── lobe-icons/
@@ -194,7 +218,7 @@ Pre-build system processes icons into:
 
 ```
 src/prebuild/
-├── icons/             # Normalized SVG files (~4,323 files)
+├── icons/             # Normalized SVG files (~4,400+ files)
 ├── icons.json         # Icon index and metadata
 └── templates/         # Shared UI templates
     ├── icons-data.js  # Minified icon data
@@ -221,6 +245,7 @@ src/prebuild/
 ./scripts/download-d365-icons.sh
 ./scripts/download-entra-icons.sh
 ./scripts/download-powerplatform-icons.sh
+./scripts/download-fabric-icons.sh
 ./scripts/download-kubernetes-icons.sh
 ./scripts/download-gilbarbara-icons.sh
 ./scripts/download-lobe-icons.sh

@@ -1,6 +1,6 @@
 # Cloud Architect Kits
 
-A comprehensive toolkit bringing **4,300+ professional cloud architecture and technology icons** directly into your favorite design and presentation tools.
+A comprehensive toolkit bringing **4,400+ professional cloud architecture and technology icons** directly into your favorite design and presentation tools.
 
 ## 🎯 What's Included
 
@@ -13,7 +13,7 @@ A comprehensive toolkit bringing **4,300+ professional cloud architecture and te
 
 ## ✨ Icon Library
 
-### 4,323 Professional Icons From:
+### 4,400+ Professional Icons From:
 
 | Source | Count | Description |
 |--------|-------|-------------|
@@ -21,6 +21,7 @@ A comprehensive toolkit bringing **4,300+ professional cloud architecture and te
 | **Microsoft 365** | ~963 | Office and productivity icons |
 | **Gilbarbara Logos** | ~1,839 | Technology company logos |
 | **Lobe Icons** | ~723 | Machine learning icons |
+| **Microsoft Fabric** | ~80+ | Data analytics and BI icons |
 | **Kubernetes** | ~39 | Container orchestration icons |
 | **Dynamics 365** | ~38 | Business application icons |
 | **Power Platform** | ~9 | Low-code platform icons |
