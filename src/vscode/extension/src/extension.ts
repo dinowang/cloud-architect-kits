@@ -155,10 +155,68 @@ async function insertIcon(iconData: any) {
     let contentToInsert: string;
 
     // Determine what to insert based on file type
-    if (languageId === 'markdown') {
-      // Markdown: Insert as <img> tag with base64 data URI
-      const size = iconData.size || 64;
-      contentToInsert = `<img alt="${iconData.name}" width="${size}" src="data:image/svg+xml;base64,${iconData.svg}" />`;
+    if (isMarkdownLanguage(languageId)) {
+      // Markdown/Marp: Ask user preference - file reference or base64
+      const choice = await vscode.window.showQuickPick(
+        [
+          { label: 'Save as file and reference', value: 'file', description: 'Save SVG to ./assets/ and insert ![](path)' },
+          { label: 'Embed as base64', value: 'base64', description: 'Insert as <img> tag with data URI' }
+        ],
+        { placeHolder: 'How would you like to insert the icon?' }
+      );
+
+      if (!choice) {
+        return; // User cancelled
+      }
+
+      if (choice.value === 'file') {
+        // Save SVG file and insert relative path reference with size
+        const size = iconData.size || 64;
+        const svgContent = Buffer.from(iconData.svg, 'base64').toString('utf-8');
+        const dimensions = extractSvgDimensions(svgContent);
+        
+        const relativePath = await saveSvgFile(editor, iconData);
+        if (relativePath) {
+          // Determine which dimension to constrain based on aspect ratio
+          let sizeLabel = 'width';
+          if (dimensions) {
+            const aspectRatio = dimensions.width / dimensions.height;
+            if (aspectRatio < 1) {
+              sizeLabel = 'height';
+            }
+          }
+          
+          contentToInsert = `![${sizeLabel}:${size}](${relativePath})`;
+        } else {
+          return; // Failed to save file
+        }
+      } else {
+        // Embed as base64 with size constraint on longest side
+        const size = iconData.size || 64;
+        const svgContent = Buffer.from(iconData.svg, 'base64').toString('utf-8');
+        const dimensions = extractSvgDimensions(svgContent);
+        
+        // Determine width/height based on aspect ratio
+        let widthAttr = '';
+        let heightAttr = '';
+        
+        if (dimensions) {
+          const aspectRatio = dimensions.width / dimensions.height;
+          if (aspectRatio >= 1) {
+            // Landscape or square: constrain width
+            widthAttr = `width="${size}"`;
+          } else {
+            // Portrait: constrain height
+            heightAttr = `height="${size}"`;
+          }
+        } else {
+          // Default to width if dimensions cannot be determined
+          widthAttr = `width="${size}"`;
+        }
+        
+        const sizeAttrs = [widthAttr, heightAttr].filter(x => x).join(' ');
+        contentToInsert = `<img src="data:image/svg+xml;base64,${iconData.svg}" alt="${iconData.name}" ${sizeAttrs} />`;
+      }
     } else if (isMarkupLanguage(languageId)) {
       // HTML/XML: Insert raw SVG with size applied
       let svgContent = Buffer.from(iconData.svg, 'base64').toString('utf-8');
@@ -184,11 +242,114 @@ async function insertIcon(iconData: any) {
       editBuilder.insert(position, contentToInsert);
     });
 
-    vscode.window.showInformationMessage(`Inserted ${iconData.name} icon`);
+    vscode.window.showInformationMessage(`Inserted ${iconData.name} icon for ${languageId}`);
   } catch (error) {
     vscode.window.showErrorMessage(`Failed to insert icon: ${error}`);
     console.error(error);
   }
+}
+
+async function saveSvgFile(editor: vscode.TextEditor, iconData: any): Promise<string | null> {
+  try {
+    let svgContent = Buffer.from(iconData.svg, 'base64').toString('utf-8');
+    
+    // Apply size constraint to longest side if specified
+    if (iconData.size && iconData.size !== 64) {
+      const dimensions = extractSvgDimensions(svgContent);
+      if (dimensions) {
+        const aspectRatio = dimensions.width / dimensions.height;
+        let newWidth: number;
+        let newHeight: number;
+        
+        if (aspectRatio >= 1) {
+          // Landscape or square: constrain width
+          newWidth = iconData.size;
+          newHeight = iconData.size / aspectRatio;
+        } else {
+          // Portrait: constrain height
+          newHeight = iconData.size;
+          newWidth = iconData.size * aspectRatio;
+        }
+        
+        svgContent = svgContent.replace(
+          /<svg([^>]*)>/,
+          `<svg$1 width="${newWidth}" height="${newHeight}">`
+        );
+      }
+    }
+    
+    // Get the directory of the current file
+    const currentFileUri = editor.document.uri;
+    const currentFileDir = path.dirname(currentFileUri.fsPath);
+    
+    // Create assets directory if it doesn't exist
+    const assetsDir = path.join(currentFileDir, 'assets');
+    if (!fs.existsSync(assetsDir)) {
+      fs.mkdirSync(assetsDir, { recursive: true });
+    }
+    
+    // Generate filename from icon name (sanitize)
+    const sanitizedName = iconData.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    
+    // Add timestamp to avoid conflicts
+    const timestamp = Date.now();
+    const filename = `${sanitizedName}-${timestamp}.svg`;
+    const filePath = path.join(assetsDir, filename);
+    
+    // Write the SVG file
+    fs.writeFileSync(filePath, svgContent, 'utf-8');
+    
+    // Return relative path
+    return `./assets/${filename}`;
+  } catch (error) {
+    vscode.window.showErrorMessage(`Failed to save SVG file: ${error}`);
+    console.error(error);
+    return null;
+  }
+}
+
+function extractSvgDimensions(svgContent: string): { width: number; height: number } | null {
+  // Try to extract width and height from SVG tag
+  const svgMatch = svgContent.match(/<svg[^>]*>/);
+  if (!svgMatch) {
+    return null;
+  }
+  
+  const svgTag = svgMatch[0];
+  const widthMatch = svgTag.match(/width=["']?(\d+(?:\.\d+)?)/);
+  const heightMatch = svgTag.match(/height=["']?(\d+(?:\.\d+)?)/);
+  
+  if (widthMatch && heightMatch) {
+    return {
+      width: parseFloat(widthMatch[1]),
+      height: parseFloat(heightMatch[1])
+    };
+  }
+  
+  // Try to extract from viewBox
+  const viewBoxMatch = svgTag.match(/viewBox=["']?[\d\s]+\s+([\d.]+)\s+([\d.]+)/);
+  if (viewBoxMatch) {
+    return {
+      width: parseFloat(viewBoxMatch[1]),
+      height: parseFloat(viewBoxMatch[2])
+    };
+  }
+  
+  return null;
+}
+
+function isMarkdownLanguage(languageId: string): boolean {
+  const markdownLanguages = [
+    'markdown',
+    'marp',
+    'mdx',
+    'markdown-math',
+    'rmd'
+  ];
+  return markdownLanguages.includes(languageId);
 }
 
 function isMarkupLanguage(languageId: string): boolean {

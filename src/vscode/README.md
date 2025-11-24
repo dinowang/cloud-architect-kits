@@ -9,7 +9,9 @@ A VSCode extension that allows you to insert cloud architecture icons (Azure, AW
 - **Quick Icon Search**: Quickly search and filter through thousands of cloud architecture icons
 - **Multi-Cloud Support**: Includes icons from Azure, AWS, GCP, and other cloud providers
 - **Smart Insertion**: Different formats based on file type
-  - **Markdown**: `<img>` tag with base64 data URI
+  - **Markdown/Marp**: Choose between file reference or base64 embed
+    - File reference: Saves SVG to `./assets/` and inserts `![width:64](./assets/icon.svg)` or `![height:64](./assets/icon.svg)` based on aspect ratio
+    - Base64 embed: Inserts `<img>` tag with data URI, width/height constrained by aspect ratio
   - **HTML/XML/JSX/Vue/Svelte**: Raw SVG code
   - **Other files**: Icon name only
 - **Category Filtering**: Icons are organized by source and service categories for easy navigation
