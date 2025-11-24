@@ -26,23 +26,49 @@ async function insertSvgIntoSlide(svgXml, name, size) {
       const slideWidth = slide.width;
       const slideHeight = slide.height;
       
+      // Parse SVG to get viewBox dimensions
+      const viewBoxMatch = svgXml.match(/viewBox=["']([^"']+)["']/);
+      let imageWidth = size;
+      let imageHeight = size;
+      
+      if (viewBoxMatch) {
+        const viewBox = viewBoxMatch[1].split(/\s+/);
+        const vbWidth = parseFloat(viewBox[2]);
+        const vbHeight = parseFloat(viewBox[3]);
+        
+        if (vbWidth && vbHeight) {
+          // Calculate dimensions: longest edge = size, maintain aspect ratio
+          const aspectRatio = vbWidth / vbHeight;
+          if (vbWidth >= vbHeight) {
+            // Width is longer
+            imageWidth = size;
+            imageHeight = size / aspectRatio;
+          } else {
+            // Height is longer
+            imageHeight = size;
+            imageWidth = size * aspectRatio;
+          }
+        }
+      }
+      
       // Calculate center position (Office uses points)
-      const imageLeft = (slideWidth - size) / 2;
-      const imageTop = (slideHeight - size) / 2;
+      const imageLeft = (slideWidth - imageWidth) / 2;
+      const imageTop = (slideHeight - imageHeight) / 2;
       
       // Insert SVG using setSelectedDataAsync with XmlSvg coercion
       Office.context.document.setSelectedDataAsync(svgXml, {
         coercionType: Office.CoercionType.XmlSvg,
         imageLeft: imageLeft,
         imageTop: imageTop,
-        imageWidth: size
+        imageWidth: imageWidth,
+        imageHeight: imageHeight
       }, function (asyncResult) {
         if (asyncResult.status === Office.AsyncResultStatus.Failed) {
           console.error('Failed to insert icon:', asyncResult.error.message);
           showStatus('Failed to insert icon', 'error');
           reject(new Error(asyncResult.error.message));
         } else {
-          console.log(`Inserted ${name} icon (${size}pt width)`);
+          console.log(`Inserted ${name} icon (${imageWidth.toFixed(1)}x${imageHeight.toFixed(1)}pt)`);
           showStatus('Icon inserted successfully!', 'success');
           resolve();
         }

@@ -1,15 +1,15 @@
 This project contains multiple plugins:
 
-- Figma  
+- Figma plugin
   Base path: ./src/figma  
   Source path: ./src/figma/plugin
-- PowerPoint  
+- PowerPoint add-in
   Base path: ./src/powerpoint  
   Source path: ./src/powerpoint/add-in
-- Google Slides  
+- Google Slides add-on
   Base path: ./src/google-slides  
   Source path: ./src/google-slides/addon
-- Draw.io  
+- Draw.io icon library
   Base path: ./src/drawio  
   Source path: ./src/drawio/iconlib
 
