@@ -103,6 +103,7 @@ jobs:
           cp src/powerpoint/add-in/taskpane.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.css dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.js dist/powerpoint-addin/
+          cp src/powerpoint/add-in/taskpane-platform.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/icons-data.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
@@ -157,6 +158,7 @@ jobs:
           cp src/powerpoint/add-in/taskpane.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.css dist/powerpoint-addin/
           cp src/powerpoint/add-in/taskpane.js dist/powerpoint-addin/
+          cp src/powerpoint/add-in/taskpane-platform.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/icons-data.js dist/powerpoint-addin/
           cp src/powerpoint/add-in/commands.html dist/powerpoint-addin/
           cp src/powerpoint/add-in/staticwebapp.config.json dist/powerpoint-addin/
