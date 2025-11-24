@@ -55,7 +55,7 @@ npm run build
 ```
 
 This generates:
-- `taskpane-built.html` (4.6 KB, references external JS)
+- `taskpane.html` (4.6 KB, references external JS)
 - `taskpane-dev.html` (4.6 KB, development)
 - `icons-data.*.js` (~26 MB, with hash for caching)
 
@@ -74,11 +74,11 @@ The add-in will be available at `http://localhost:3000`
 Edit `manifest.xml` and change all URLs to use `localhost:3000`:
 
 ```xml
-<SourceLocation DefaultValue="http://localhost:3000/taskpane-built.html"/>
+<SourceLocation DefaultValue="http://localhost:3000/taskpane.html"/>
 ```
 
 ```xml
-<bt:Url id="Taskpane.Url" DefaultValue="http://localhost:3000/taskpane-built.html"/>
+<bt:Url id="Taskpane.Url" DefaultValue="http://localhost:3000/taskpane.html"/>
 <bt:Url id="Commands.Url" DefaultValue="http://localhost:3000/commands.html"/>
 ```
 
@@ -251,7 +251,7 @@ ls icons/*.svg | wc -l
 **Solution:**
 - Open browser console (F12) in task pane
 - Check for CORS errors
-- Verify `taskpane-built.html` is ~52MB
+- Verify `taskpane.html` is ~52MB
 - Verify `icons-data.*.js` exists
 
 ### Deployment Issues
@@ -293,7 +293,7 @@ After build, verify these files exist:
 - [ ] `icons/` directory with ~4300 SVG files
 - [ ] `icons.json` (~550KB)
 - [ ] `icons-data.*.js` (~26MB)
-- [ ] `taskpane-built.html` (~52MB)
+- [ ] `taskpane.html` (~52MB)
 - [ ] `taskpane-dev.html`
 - [ ] `manifest.xml` (updated with correct URLs)
 - [ ] `assets/icon-*.png` (4 files)
@@ -304,7 +304,7 @@ After build, verify these files exist:
 
 The add-in includes 4300+ icons, which results in large files:
 
-1. **Use production build:** `taskpane-built.html` has all icons embedded
+1. **Use production build:** `taskpane.html` has all icons embedded
 2. **Lazy loading:** Icons are loaded on-demand during scrolling
 3. **Search debouncing:** Search is debounced by 300ms for performance
 4. **Limited initial render:** Only first 100 icons rendered initially

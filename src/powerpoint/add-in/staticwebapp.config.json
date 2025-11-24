@@ -13,8 +13,15 @@
     }
   ],
   "navigationFallback": {
-    "rewrite": "/taskpane-built.html",
-    "exclude": ["/assets/*", "/icons/*", "/*.js", "/*.css", "/*.json", "/*.xml"]
+    "rewrite": "/taskpane.html",
+    "exclude": [
+      "/assets/*",
+      "/icons/*",
+      "/*.js",
+      "/*.css",
+      "/*.json",
+      "/*.xml"
+    ]
   },
   "mimeTypes": {
     ".json": "application/json",

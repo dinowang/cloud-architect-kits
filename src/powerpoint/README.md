@@ -223,7 +223,7 @@ jobs:
 After deployment, update `add-in/manifest.xml` with your Static Web App URL:
 
 ```xml
-<SourceLocation DefaultValue="https://your-swa-url.azurestaticapps.net/taskpane-built.html"/>
+<SourceLocation DefaultValue="https://your-swa-url.azurestaticapps.net/taskpane.html"/>
 ```
 
 ## Directory Structure Details
