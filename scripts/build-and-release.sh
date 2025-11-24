@@ -9,6 +9,7 @@ FIGMA_DIR="$PROJECT_ROOT/src/figma/plugin"
 PPT_DIR="$PROJECT_ROOT/src/powerpoint/add-in"
 GSLIDES_DIR="$PROJECT_ROOT/src/google-slides/addon"
 DRAWIO_DIR="$PROJECT_ROOT/src/drawio/iconlib"
+VSCODE_DIR="$PROJECT_ROOT/src/vscode/extension"
 DIST_DIR="$PROJECT_ROOT/dist"
 
 echo "=========================================="
@@ -99,11 +100,21 @@ fi
 npm run build
 echo ""
 
-# Step 8: Prepare distribution
-echo "==> Step 8: Preparing distribution..."
+# Step 8: Build VSCode extension
+echo "==> Step 8: Building VSCode extension..."
+cd "$VSCODE_DIR"
+if [ ! -d "node_modules" ]; then
+    npm install
+fi
+npm run package
+echo ""
+
+# Step 9: Prepare distribution
+echo "==> Step 9: Preparing distribution..."
 mkdir -p "$DIST_DIR/figma-plugin"
 mkdir -p "$DIST_DIR/powerpoint-addin"
 mkdir -p "$DIST_DIR/google-slides-addon"
+mkdir -p "$DIST_DIR/vscode-extension"
 
 echo "--- Packaging Figma plugin..."
 cp "$FIGMA_DIR/manifest.json" "$DIST_DIR/figma-plugin/"
@@ -129,13 +140,19 @@ cp "$GSLIDES_DIR/SidebarScript.html" "$DIST_DIR/google-slides-addon/"
 cp "$GSLIDES_DIR/SidebarData.html" "$DIST_DIR/google-slides-addon/"
 cp "$GSLIDES_DIR/SidebarPlatform.html" "$DIST_DIR/google-slides-addon/"
 
+echo "--- Packaging VSCode extension..."
+cp "$VSCODE_DIR"/*.vsix "$DIST_DIR/vscode-extension/" 2>/dev/null || echo "No .vsix file found"
+
 # Create zip files
 echo "--- Creating release archives..."
 cd "$DIST_DIR"
-(cd figma-plugin && zip -r ../cloud-architect-kit-figma-plugin.zip .)
-(cd powerpoint-addin && zip -r ../cloud-architect-kit-powerpoint-addin.zip .)
-(cd google-slides-addon && zip -r ../cloud-architect-kit-google-slides-addon.zip .)
-(cd drawio-iconlib && zip -r ../cloud-architect-kit-drawio-iconlib.zip .)
+(cd figma-plugin && zip -r ../cloud-architect-kits-figma-plugin.zip .)
+(cd powerpoint-addin && zip -r ../cloud-architect-kits-powerpoint-addin.zip .)
+(cd google-slides-addon && zip -r ../cloud-architect-kits-google-slides-addon.zip .)
+(cd drawio-iconlib && zip -r ../cloud-architect-kits-drawio-iconlib.zip .)
+if [ -f vscode-extension/*.vsix ]; then
+    cp vscode-extension/*.vsix .
+fi
 
 echo ""
 echo "=========================================="
@@ -156,8 +173,11 @@ echo ""
 echo "Draw.io Icon Libraries:"
 ls -lh "$DIST_DIR/drawio-iconlib" | head -15
 echo ""
+echo "VSCode Extension:"
+ls -lh "$DIST_DIR/vscode-extension"
+echo ""
 echo "Release archives:"
-ls -lh "$DIST_DIR"/*.zip
+ls -lh "$DIST_DIR"/*.zip "$DIST_DIR"/*.vsix 2>/dev/null || ls -lh "$DIST_DIR"/*.zip
 echo ""
 echo "To install Figma plugin:"
 echo "  1. Open Figma Desktop App"
@@ -178,4 +198,10 @@ echo "To use Draw.io icon libraries:"
 echo "  1. Open Draw.io (https://app.diagrams.net)"
 echo "  2. Go to File → Open Library from → Device"
 echo "  3. Select a library file from: $DIST_DIR/drawio-iconlib/"
+echo ""
+echo "To install VSCode extension:"
+echo "  1. Open VSCode"
+echo "  2. Press Cmd+Shift+P (or Ctrl+Shift+P on Windows/Linux)"
+echo "  3. Type 'Extensions: Install from VSIX...'"
+echo "  4. Select the .vsix file from: $DIST_DIR/"
 echo ""

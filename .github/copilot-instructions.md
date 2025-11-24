@@ -12,6 +12,9 @@ This project contains multiple plugins:
 - Draw.io icon library
   Base path: ./src/drawio  
   Source path: ./src/drawio/iconlib
+- VS Code extension
+  Base path: ./src/vscode  
+  Source path: ./src/vscode/extension
 
 Each plugin depends on prebuild resources:
 

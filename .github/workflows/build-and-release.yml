@@ -87,11 +87,18 @@ jobs:
           npm ci
           npm run build
 
+      - name: Build VSCode extension
+        working-directory: src/vscode/extension
+        run: |
+          npm ci
+          npm run package
+
       - name: Prepare distribution
         run: |
           mkdir -p dist/figma-plugin
           mkdir -p dist/powerpoint-addin
           mkdir -p dist/google-slides-addon
+          mkdir -p dist/vscode-extension
 
           # Figma plugin
           cp src/figma/plugin/manifest.json dist/figma-plugin/
@@ -116,6 +123,9 @@ jobs:
           cp src/google-slides/addon/SidebarScript.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarData.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarPlatform.html dist/google-slides-addon/
+
+          # VSCode extension
+          cp src/vscode/extension/*.vsix dist/vscode-extension/ 2>/dev/null || echo "No .vsix file found"
 
           # Draw.io icon libraries (already built to dist/drawio-iconlib by build step)
 
@@ -220,26 +230,31 @@ jobs:
         run: |
           # Create Figma plugin archive
           cd dist/figma-plugin
-          zip -r ../../cloud-architect-kit-figma-plugin.zip .
+          zip -r ../../cloud-architect-kits-figma-plugin.zip .
           cd ../..
 
           # Create PowerPoint add-in archive
           cd dist/powerpoint-addin
-          zip -r ../../cloud-architect-kit-powerpoint-addin.zip .
+          zip -r ../../cloud-architect-kits-powerpoint-addin.zip .
           cd ../..
 
           # Create Google Slides add-on archive
           cd dist/google-slides-addon
-          zip -r ../../cloud-architect-kit-google-slides-addon.zip .
+          zip -r ../../cloud-architect-kits-google-slides-addon.zip .
           cd ../..
 
           # Create Draw.io icon libraries archive (if exists)
           cd dist/drawio-iconlib
-          zip -r ../../cloud-architect-kit-drawio-iconlib.zip .
+          zip -r ../../cloud-architect-kits-drawio-iconlib.zip .
           cd ../..
 
+          # Copy VSCode extension .vsix (no need to zip)
+          if [ -f dist/vscode-extension/*.vsix ]; then
+            cp dist/vscode-extension/*.vsix .
+          fi
+
           echo "Release archives created:"
-          ls -lh cloud-architect-kit-*.zip
+          ls -lh cloud-architect-kits-*.zip *.vsix 2>/dev/null || ls -lh cloud-architect-kits-*.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -254,27 +269,28 @@ jobs:
             - **Commit**: ${{ github.sha }}
 
             ### Packages Included
-            - **Figma Plugin**: `cloud-architect-kit-figma-plugin.zip`
-            - **PowerPoint Add-in**: `cloud-architect-kit-powerpoint-addin.zip`
-            - **Google Slides Add-on**: `cloud-architect-kit-google-slides-addon.zip`
-            - **Draw.io Icon Libraries**: `cloud-architect-kit-drawio-iconlib.zip`
+            - **Figma Plugin**: `cloud-architect-kits-figma-plugin.zip`
+            - **PowerPoint Add-in**: `cloud-architect-kits-powerpoint-addin.zip`
+            - **Google Slides Add-on**: `cloud-architect-kits-google-slides-addon.zip`
+            - **Draw.io Icon Libraries**: `cloud-architect-kits-drawio-iconlib.zip`
+            - **VSCode Extension**: `cloud-architect-kits-vscode-extension-1.0.0.vsix`
 
             ### Installation - Figma Plugin
-            1. Download `cloud-architect-kit-figma-plugin.zip`
+            1. Download `cloud-architect-kits-figma-plugin.zip`
             2. Extract the archive
             3. Open Figma Desktop App
             4. Go to Plugins → Development → Import plugin from manifest...
             5. Select the extracted `manifest.json` file
 
             ### Installation - PowerPoint Add-in
-            1. Download `cloud-architect-kit-powerpoint-addin.zip`
+            1. Download `cloud-architect-kits-powerpoint-addin.zip`
             2. Extract the archive
             3. Deploy to Azure Static Web Apps or local server
             4. Update manifest.xml with your deployment URL
             5. Sideload in PowerPoint
 
             ### Installation - Google Slides Add-on
-            1. Download `cloud-architect-kit-google-slides-addon.zip`
+            1. Download `cloud-architect-kits-google-slides-addon.zip`
             2. Extract the archive
             3. Install clasp: `npm install -g @google/clasp`
             4. Login to Google: `clasp login`
@@ -283,20 +299,30 @@ jobs:
             7. Open in Google Slides: Extensions → Cloud Architect Kits → Show Icons
 
             ### Installation - Draw.io Icon Libraries
-            1. Download `cloud-architect-kit-drawio-iconlib.zip`
+            1. Download `cloud-architect-kits-drawio-iconlib.zip`
             2. Extract the archive
             3. Open Draw.io (https://app.diagrams.net)
             4. Go to File → Open Library from → Device
             5. Select a library file (e.g., `cloud-architect-azure.xml`)
             6. The library will appear in the left sidebar
 
+            ### Installation - VSCode Extension
+            1. Download `cloud-architect-kits-vscode-extension-1.0.0.vsix`
+            2. Open VSCode
+            3. Press Cmd+Shift+P (or Ctrl+Shift+P on Windows/Linux)
+            4. Type "Extensions: Install from VSIX..."
+            5. Select the downloaded .vsix file
+            6. Reload VSCode
+            7. Use Command Palette: "Cloud Architect Kits: Insert Icon"
+
             ### Changes
-            This release contains updates to all platform distribution files (Figma, PowerPoint, Google Slides, Draw.io).
+            This release contains updates to all platform distribution files (Figma, PowerPoint, Google Slides, Draw.io, VSCode).
           files: |
-            cloud-architect-kit-figma-plugin.zip
-            cloud-architect-kit-powerpoint-addin.zip
-            cloud-architect-kit-google-slides-addon.zip
-            cloud-architect-kit-drawio-iconlib.zip
+            cloud-architect-kits-figma-plugin.zip
+            cloud-architect-kits-powerpoint-addin.zip
+            cloud-architect-kits-google-slides-addon.zip
+            cloud-architect-kits-drawio-iconlib.zip
+            cloud-architect-kits-vscode-extension-*.vsix
           draft: false
           prerelease: false
         env:

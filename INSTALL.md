@@ -60,6 +60,21 @@ npm run build
 # Then load XML files from dist/drawio-iconlib/ in Draw.io
 ```
 
+## 💻 VSCode Extension
+
+For inserting icons into text files.
+
+**[→ VSCode Extension Installation Guide](./src/vscode/INSTALL.md)**
+
+Quick start:
+```bash
+cd src/vscode/extension
+npm install
+npm run compile
+npm run package
+# Then install the .vsix file in VSCode
+```
+
 ## 📋 Prerequisites
 
 Both platforms require:
@@ -81,6 +96,9 @@ Both platforms require:
 
 **For Draw.io:**
 - Web browser or Draw.io Desktop App
+
+**For VSCode:**
+- Visual Studio Code 1.80.0 or higher
 
 ## 🔧 Development Setup
 
@@ -140,6 +158,16 @@ npm install
 npm run build
 ```
 
+#### 6. VSCode Extension
+
+```bash
+cd src/vscode/extension
+npm install
+npm run compile
+```
+
+The build script automatically copies icons from prebuild.
+
 ## 📚 Detailed Documentation
 
 - **[Figma Plugin README](./src/figma/README.md)** - Features and usage
@@ -150,6 +178,8 @@ npm run build
 - **[Draw.io Icon Libraries INSTALL](./src/drawio/INSTALL.md)** - Step-by-step guide
 - **[Google Slides Add-on README](./src/google-slides/README.md)** - Features and usage
 - **[Google Slides Add-on INSTALL](./src/google-slides/INSTALL.md)** - Step-by-step guide
+- **[VSCode Extension README](./src/vscode/README.md)** - Features and usage
+- **[VSCode Extension INSTALL](./src/vscode/INSTALL.md)** - Step-by-step guide
 - **[Prebuild System](./src/prebuild/README.md)** - Icon processing details
 
 ## 🆘 Need Help?

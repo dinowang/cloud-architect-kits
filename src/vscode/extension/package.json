@@ -1,0 +1,57 @@
+{
+  "name": "cloud-architect-kits-vscode-extension",
+  "displayName": "Cloud Architect Kits",
+  "description": "Insert cloud architecture icons into files",
+  "version": "1.0.0",
+  "publisher": "cloud-architect-kits",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:cloudArchitectKits.iconsView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "cloudArchitectKits",
+          "title": "Cloud Architect Kits",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "cloudArchitectKits": [
+        {
+          "type": "webview",
+          "id": "cloudArchitectKits.iconsView",
+          "name": "Icons"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "cloudArchitectKits.insertIcon",
+        "title": "Cloud Architect Kits: Insert Icon"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "prebuild": "node build.js",
+    "compile": "npm run prebuild && tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "prepackage": "npm run compile",
+    "package": "vsce package --allow-missing-repository --no-yarn"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^3.7.1",
+    "typescript": "^5.0.0"
+  }
+}

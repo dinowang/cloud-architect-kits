@@ -8,6 +8,7 @@ A comprehensive toolkit bringing **4,400+ professional cloud architecture and te
 - **📊 [PowerPoint Add-in](./src/powerpoint)** - Add icons to PowerPoint presentations
 - **📈 [Google Slides Add-on](./src/google-slides)** - Add icons to Google Slides presentations
 - **📐 [Draw.io Icon Libraries](./src/drawio)** - Import icons into Draw.io diagrams
+- **💻 [VSCode Extension](./src/vscode)** - Insert icons into text files
 - **🔧 Unified Icon System** - Consistent library across all platforms
 - **☁️ Azure Deployment** - Host PowerPoint add-in on Azure Static Web Apps
 
@@ -78,6 +79,19 @@ Then load library files from `dist/drawio-iconlib/` in Draw.io.
 
 📖 [Detailed Draw.io Instructions →](./src/drawio/INSTALL.md)
 
+### For VSCode Users
+
+```bash
+cd src/vscode/extension
+npm install
+npm run compile
+npm run package
+```
+
+Then install the generated `.vsix` file in VSCode.
+
+📖 [Detailed VSCode Instructions →](./src/vscode/INSTALL.md)
+
 ## ✨ Features
 
 - **🔍 Smart Search** - Filter by name, source, or category
@@ -102,12 +116,12 @@ Then load library files from `dist/drawio-iconlib/` in Draw.io.
           │   System     │     - Normalize SVGs
           └──────┬──────┘     - Generate templates
                  │            - Create icons-data.js
-       ┌─────────┴─────────────────┐
-       │         │         │        │
-  ┌────▼─────┐ ┌▼──────┐ ┌▼──────┐ ┌▼──────┐
-  │  Figma   │ │ PPT   │ │Google │ │Draw.io│
-  │  Plugin  │ │Add-in │ │Slides │ │Library│
-  └──────────┘ └───────┘ └───────┘ └───────┘
+       ┌─────────┴──────────────────────┐
+       │         │         │      │      │
+  ┌────▼─────┐ ┌▼──────┐ ┌▼──────┐ ┌▼──────┐ ┌▼──────┐
+  │  Figma   │ │ PPT   │ │Google │ │Draw.io│ │VSCode │
+  │  Plugin  │ │Add-in │ │Slides │ │Library│ │  Ext  │
+  └──────────┘ └───────┘ └───────┘ └───────┘ └───────┘
 ```
 
 **Benefits:**
