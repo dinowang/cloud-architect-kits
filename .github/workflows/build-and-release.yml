@@ -115,7 +115,7 @@ jobs:
           cp src/google-slides/addon/SidebarScript.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarData.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarPlatform.html dist/google-slides-addon/
-          
+
           # Draw.io icon libraries (already built to dist/drawio-iconlib by build step)
 
       - name: Check for changes in dist
@@ -169,7 +169,7 @@ jobs:
           cp src/google-slides/addon/SidebarScript.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarData.html dist/google-slides-addon/
           cp src/google-slides/addon/SidebarPlatform.html dist/google-slides-addon/
-          
+
           # Draw.io icon libraries need to be rebuilt
           cd src/drawio/iconlib
           npm ci
@@ -232,13 +232,9 @@ jobs:
           cd ../..
 
           # Create Draw.io icon libraries archive (if exists)
-          if [ -d "dist/drawio-iconlib" ]; then
-            cd dist/drawio-iconlib
-            zip -r ../../cloud-architect-kit-drawio-iconlib.zip .
-            cd ../..
-          else
-            echo "⚠️ Draw.io icon libraries directory not found, skipping archive creation"
-          fi
+          cd dist/drawio-iconlib
+          zip -r ../../cloud-architect-kit-drawio-iconlib.zip .
+          cd ../..
 
           echo "Release archives created:"
           ls -lh cloud-architect-kit-*.zip
@@ -253,7 +249,6 @@ jobs:
 
             ### Build Information
             - **Release Tag**: ${{ needs.build.outputs.release_tag }}
-            - **Build Time**: $(date -u +'%Y-%m-%d %H:%M:%S UTC')
             - **Commit**: ${{ github.sha }}
 
             ### Packages Included
@@ -292,18 +287,6 @@ jobs:
             4. Go to File → Open Library from → Device
             5. Select a library file (e.g., `cloud-architect-azure.xml`)
             6. The library will appear in the left sidebar
-
-            ### Icon Library
-            - Azure Architecture Icons (~705)
-            - Microsoft 365 Icons (~963)
-            - Dynamics 365 Icons (~38)
-            - Microsoft Entra Icons (~7)
-            - Power Platform Icons (~9)
-            - Kubernetes Icons (~39)
-            - Gilbarbara Logos (~1839)
-            - Lobe Icons (~723)
-
-            **Total: ~4,323 icons**
 
             ### Changes
             This release contains updates to all platform distribution files (Figma, PowerPoint, Google Slides, Draw.io).
