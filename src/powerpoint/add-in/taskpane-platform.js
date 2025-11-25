@@ -92,3 +92,9 @@ function showStatus(message, type) {
     statusEl.classList.remove('show');
   }, 3000);
 }
+
+// Initialize plugin when Office.js is ready
+Office.onReady(() => {
+  initializeIcons();
+  setupEventListeners();
+});
