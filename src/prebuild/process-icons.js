@@ -1,3 +1,5 @@
+const support = require('./support.js');
+
 const fs = require('fs');
 const path = require('path');
 
@@ -10,7 +12,7 @@ if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
-function findAllSvgFiles(dir, fileList = []) {
+function findAllSvgFiles(dir, baseDir, fileList = [], pathAndFileFilter = null) {
   const files = fs.readdirSync(dir);
   
   files.forEach(file => {
@@ -18,8 +20,17 @@ function findAllSvgFiles(dir, fileList = []) {
     const stat = fs.statSync(filePath);
     
     if (stat.isDirectory()) {
-      findAllSvgFiles(filePath, fileList);
+      findAllSvgFiles(filePath, baseDir, fileList, pathAndFileFilter);
     } else if (file.endsWith('.svg')) {
+      // Apply path and file filter if provided
+      if (pathAndFileFilter) {
+        const relativePath = path.relative(baseDir, path.dirname(filePath));
+        const fileName = path.basename(filePath, '.svg');
+        const shouldInclude = pathAndFileFilter(relativePath, fileName);
+        if (!shouldInclude) {
+          return; // Skip this file
+        }
+      }
       fileList.push(filePath);
     }
   });
@@ -31,8 +42,7 @@ function normalizeFileName(fileName) {
   return fileName
     .replace(/^\d+-icon-service-/, '')
     .replace(/_scalable$/, '')
-    .replace(/_/g, ' ')
-    .replace(/-/g, ' ')
+    .replace(/[-_]/g, ' ')  // Combined: replace both - and _ with space
     .trim();
 }
 
@@ -71,19 +81,82 @@ function normalizeSvgSize(svgContent) {
 
 const sources = [
   {
-    name: 'Azure',
+    name: 'AWS',
+    path: path.join(tempDir, 'aws-icons'),
+    getCategoryFromPath: (relativePath) => {
+      const parts = relativePath.split(path.sep);
+      // Extract category from path like "Architecture-Service-Icons_07312025/Arch_Compute/..."
+      if (parts.length > 1) {
+        // Return the second-level folder (e.g., "Arch_Compute")
+        return parts[1] || null;
+      }
+      return null;
+    },
+    // Filter: Exclude Dark, Light, 16/32 size variants, keep only 48/64 colored icons
+    pathAndFileFilter: (relativePath, fileName) => {
+      const normalizedPath = relativePath.toLowerCase();
+      const normalizedFile = fileName.toLowerCase();
+      
+      // Exclude files with double underscore
+      if (normalizedFile.includes('__')) return false;
+      
+      // Exclude logo files with size suffix
+      if (/-logo[_-]\d+$/.test(normalizedFile)) return false;
+      
+      // Only include Architecture-* folders
+      if (!/^architecture-/.test(normalizedPath)) return false;
+      
+      // Keep only _32 size variants
+      if (/_32$/.test(normalizedFile)) return true;
+
+      return false;
+    },
+    // Rename categories
+    categoryRename: (category) => {
+      if (!category) return null;
+      // Remove prefix and date suffix
+      var n = category
+                .replace(/^(Arch\-Category_|Res_Amazon\-|Arch[\-_ ])/gi, '')
+                .replace(/_\d+\.svg/, '')
+                .replace(/[-_]/g, ' ')
+                .trim();
+
+      return support.normalizeTitle(n); 
+    },
+    // Rename icons
+    iconRename: (name) => {
+      // Remove prefixes and clean up
+      var n = name
+                .replace(/^(Arch\-Category_|Res_Amazon\-|Arch[\-_ ])/gi, '')
+                .replace(/[ _](16|32|48|64)$/gi, '')
+                .replace(/[\-_]/g, ' ')
+                .trim();
+
+      return support.normalizeTitle(n);
+    },
+  },
+  {
+    name: 'Microsoft Azure',
     path: path.join(tempDir, 'azure-icons/Azure_Public_Service_Icons/Icons'),
-    getCategoryFromPath: (relativePath) => path.dirname(relativePath),
+    getCategoryFromPath: (relativePath) => support.normalizeTitle(path.dirname(relativePath)),
   },
   {
-    name: 'Entra',
+    name: 'Microsoft Entra',
     path: path.join(tempDir, 'entra-icons/Microsoft Entra architecture icons - Oct 2023/Microsoft Entra color icons SVG'),
-    getCategoryFromPath: (relativePath) => path.dirname(relativePath),
+    getCategoryFromPath: (relativePath) => support.normalizeTitle(path.dirname(relativePath)),
+    // Rename icons
+    iconRename: (name) => {
+      // Remove prefixes and clean up
+      return name
+        .replace(/\s?color\sicon\s?/gi, '')
+        .trim();
+    },
   },
   {
-    name: 'Fabric',
+    name: 'Microsoft Fabric',
     path: path.join(tempDir, 'fabric-icons'),
     getCategoryFromPath: (relativePath) => null,
+    iconRename: (name) => support.normalizeTitle(name),
   },
   {
     name: 'Microsoft 365',
@@ -94,27 +167,36 @@ const sources = [
     },
   },
   {
-    name: 'Dynamics 365',
+    name: 'Microsoft Dynamics 365',
     path: path.join(tempDir, 'd365-icons/Dynamics_365_Icons_scalable'),
     getCategoryFromPath: (relativePath) => null,
+    iconRename: (name) => support.normalizeTitle(name),
   },
   {
-    name: 'Power Platform',
+    name: 'Microsoft Power Platform',
     path: path.join(tempDir, 'powerplatform-icons/Power_Platform_scalable'),
     getCategoryFromPath: (relativePath) => null,
+    iconRename: (name) => support.normalizeTitle(name),
   },
   {
-    name: 'Kubernetes',
+    name: 'CNCF Kubernetes',
     path: path.join(tempDir, 'kubernetes-icons'),
     getCategoryFromPath: (relativePath) => null,
   },
   {
-    name: 'Gilbarbara',
+    name: 'GitHub Gilbarbara',
     path: path.join(tempDir, 'gilbarbara-icons/logos'),
     getCategoryFromPath: (relativePath) => null,
+    pathAndFileFilter: (relativePath, fileName) => {
+      const normalizedFile = fileName.toLowerCase();
+      // Exclude aws* files
+      if (normalizedFile.startsWith('aws')) return false;
+
+      return true;
+    },
   },
   {
-    name: 'Lobe-icons',
+    name: 'GitHub Lobe-icons',
     path: path.join(tempDir, 'lobe-icons/packages/static-svg/icons/'),
     getCategoryFromPath: (relativePath) => null,
   },
@@ -130,13 +212,23 @@ sources.forEach(source => {
   }
 
   console.log(`Processing ${source.name}...`);
-  const svgFiles = findAllSvgFiles(source.path);
+  const svgFiles = findAllSvgFiles(source.path, source.path, [], source.pathAndFileFilter);
   
   svgFiles.forEach((filePath) => {
     const relativePath = path.relative(source.path, filePath);
-    const category = source.getCategoryFromPath(relativePath);
+    let category = source.getCategoryFromPath(relativePath);
     const fileName = path.basename(filePath, '.svg');
-    const serviceName = normalizeFileName(fileName);
+    let serviceName = normalizeFileName(fileName);
+    
+    // Apply category rename if provided
+    if (source.categoryRename && category) {
+      category = source.categoryRename(category);
+    }
+    
+    // Apply icon rename if provided
+    if (source.iconRename) {
+      serviceName = source.iconRename(serviceName);
+    }
     
     // Read, normalize, and save SVG
     const newFileName = `${iconIndex}.svg`;

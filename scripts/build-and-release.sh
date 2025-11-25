@@ -21,6 +21,10 @@ echo ""
 echo "==> Step 1: Downloading all icon sources..."
 echo ""
 
+echo "--- Downloading AWS icons..."
+"$SCRIPT_DIR/download-aws-icons.sh"
+echo ""
+
 echo "--- Downloading Azure icons..."
 "$SCRIPT_DIR/download-azure-icons.sh"
 echo ""
@@ -39,6 +43,10 @@ echo ""
 
 echo "--- Downloading Power Platform icons..."
 "$SCRIPT_DIR/download-powerplatform-icons.sh"
+echo ""
+
+echo "--- Downloading Microsoft Fabric icons..."
+"$SCRIPT_DIR/download-fabric-icons.sh"
 echo ""
 
 echo "--- Downloading Kubernetes icons..."

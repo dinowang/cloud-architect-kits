@@ -12,5 +12,8 @@
     "architecture"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "text-case": "^1.2.9"
+  }
 }

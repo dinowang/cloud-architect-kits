@@ -47,11 +47,13 @@ jobs:
 
       - name: Download icon sources
         run: |
+          ./scripts/download-aws-icons.sh
           ./scripts/download-azure-icons.sh
           ./scripts/download-m365-icons.sh
           ./scripts/download-d365-icons.sh
           ./scripts/download-entra-icons.sh
           ./scripts/download-powerplatform-icons.sh
+          ./scripts/download-fabric-icons.sh
           ./scripts/download-kubernetes-icons.sh
           ./scripts/download-gilbarbara-icons.sh
           ./scripts/download-lobe-icons.sh
