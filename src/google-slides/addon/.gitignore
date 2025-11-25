@@ -1,3 +1,8 @@
 node_modules/
 out/
 .clasp.json
+Sidebar.html
+SidebarData.html
+SidebarScript.html
+SidebarStyle.html
+SidebarPlatform.html

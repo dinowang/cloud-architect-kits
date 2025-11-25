@@ -63,13 +63,7 @@ fs.writeFileSync(uiHtmlPath, html);
 const uiHtmlSize = (fs.statSync(uiHtmlPath).size / 1024 / 1024).toFixed(2);
 console.log(`✓ Built: ui.html (${uiHtmlSize} MB)`);
 
-// Copy compiled code.js
-const codeJsSource = path.join(__dirname, 'code.js');
-const codeJsDest = path.join(outDir, 'code.js');
-if (fs.existsSync(codeJsSource)) {
-  fs.copyFileSync(codeJsSource, codeJsDest);
-  console.log('✓ Copied: code.js');
-}
+// Note: code.js will be compiled by TypeScript directly to out/
 
 // Copy manifest.json
 fs.copyFileSync(path.join(__dirname, 'manifest.json'), path.join(outDir, 'manifest.json'));

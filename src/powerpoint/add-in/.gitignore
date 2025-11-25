@@ -1,2 +1,6 @@
 node_modules/
 out/
+icons-data.js
+taskpane.html
+taskpane.css
+taskpane.js
