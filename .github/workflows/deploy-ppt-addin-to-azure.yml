@@ -50,7 +50,7 @@ jobs:
             /repos/${{ github.repository }}/releases/tags/$RELEASE_TAG)
 
           # Check if PowerPoint add-in asset exists
-          ASSET_URL=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name == "cloud-architect-kit-powerpoint-addin.zip") | .browser_download_url')
+          ASSET_URL=$(echo "$RELEASE_INFO" | jq -r '.assets[] | select(.name == "cloud-architect-kits-powerpoint-addin.zip") | .browser_download_url')
 
           if [ -z "$ASSET_URL" ] || [ "$ASSET_URL" == "null" ]; then
             echo "❌ PowerPoint add-in asset not found in release $RELEASE_TAG"
@@ -76,11 +76,11 @@ jobs:
       - name: Download PowerPoint add-in
         run: |
           echo "Downloading PowerPoint add-in from release..."
-          curl -L -o cloud-architect-kit-powerpoint-addin.zip "${{ needs.check-release.outputs.download_url }}"
+          curl -L -o cloud-architect-kits-powerpoint-addin.zip "${{ needs.check-release.outputs.download_url }}"
 
           echo "Extracting add-in files..."
           mkdir -p ppt-addin
-          unzip -q cloud-architect-kit-powerpoint-addin.zip -d ppt-addin
+          unzip -q cloud-architect-kits-powerpoint-addin.zip -d ppt-addin
 
           echo "Creating index.html for Azure Static Web Apps validation..."
           cat > ppt-addin/index.html << 'EOF'
@@ -185,8 +185,10 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: "ppt-addin"
+          output_location: ""
           skip_app_build: true
           skip_api_build: true
+          production_branch: "main"
 
       - name: Deployment summary
         run: |
@@ -220,7 +222,7 @@ jobs:
           echo "PowerPoint add-in asset not found in release ${{ needs.check-release.outputs.release_tag }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Expected Asset" >> $GITHUB_STEP_SUMMARY
-          echo "- Asset name: \`cloud-architect-kit-powerpoint-addin.zip\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Asset name: \`cloud-architect-kits-powerpoint-addin.zip\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Action Required" >> $GITHUB_STEP_SUMMARY
           echo "1. Ensure the build workflow created the PowerPoint add-in" >> $GITHUB_STEP_SUMMARY
