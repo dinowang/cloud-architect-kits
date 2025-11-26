@@ -1,4 +1,4 @@
-figma.showUI(__html__, { width: 480, height: 740 });
+figma.showUI(__html__, { width: 380, height: 740 });
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === 'insert-icon') {
@@ -20,11 +20,10 @@ figma.ui.onmessage = async (msg) => {
       group.expanded = false;
       group.lockAspectRatio();
       
-      // Add to current page (already done by group)
-      // figma.currentPage.appendChild(group);
-      
-      // Center in viewport
-      figma.viewport.scrollAndZoomIntoView([group]);
+      // Position at center of current viewport
+      const viewportCenter = figma.viewport.center;
+      group.x = viewportCenter.x - group.width / 2;
+      group.y = viewportCenter.y - group.height / 2;
       
       // Select the group
       figma.currentPage.selection = [group];

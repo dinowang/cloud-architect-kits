@@ -48,6 +48,8 @@ const INITIALISMS = new Map([
   ["hr", "HR"],
   ["crm", "CRM"],
   ["mes", "MES"],
+  ["b2b", "B2B"],
+  ["b2c", "B2C"],
 
   ["aad", "AAD"],
   ["ad", "AD"],
@@ -71,7 +73,19 @@ const INITIALISMS = new Map([
 ]);
 
 export function normalizeTitle(input) {
-  return capitalCase(input, {
-    transform: (word, index) => INITIALISMS.get(word.toLowerCase()) ?? word,
-  });
+  // Split by word boundaries (spaces, hyphens, underscores, etc.)
+  const words = input.split(/[\s\-_]+/);
+  
+  return words.map(word => {
+    const lowerWord = word.toLowerCase();
+    
+    // Check if entire word is in dictionary
+    if (INITIALISMS.has(lowerWord)) {
+      return INITIALISMS.get(lowerWord);
+    }
+    
+    // Otherwise capitalize first letter only
+    if (word.length === 0) return word;
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  }).join(' ');
 }

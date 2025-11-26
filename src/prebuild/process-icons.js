@@ -1,8 +1,11 @@
-const support = require('./support.js');
+import { normalizeTitle } from './support.js';
+import fs from 'fs';
+import path from 'path';
+import crypto from 'crypto';
+import { fileURLToPath } from 'url';
 
-const fs = require('fs');
-const path = require('path');
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const rootDir = __dirname;
 const tempDir = path.join(rootDir, '../../temp');
 const outputDir = path.join(rootDir, 'icons');
@@ -121,7 +124,7 @@ const sources = [
                 .replace(/[-_]/g, ' ')
                 .trim();
 
-      return support.normalizeTitle(n); 
+      return normalizeTitle(n); 
     },
     // Rename icons
     iconRename: (name) => {
@@ -132,18 +135,18 @@ const sources = [
                 .replace(/[\-_]/g, ' ')
                 .trim();
 
-      return support.normalizeTitle(n);
+      return normalizeTitle(n);
     },
   },
   {
     name: 'Microsoft Azure',
     path: path.join(tempDir, 'azure-icons/Azure_Public_Service_Icons/Icons'),
-    getCategoryFromPath: (relativePath) => support.normalizeTitle(path.dirname(relativePath)),
+    getCategoryFromPath: (relativePath) => normalizeTitle(path.dirname(relativePath)),
   },
   {
     name: 'Microsoft Entra',
     path: path.join(tempDir, 'entra-icons/Microsoft Entra architecture icons - Oct 2023/Microsoft Entra color icons SVG'),
-    getCategoryFromPath: (relativePath) => support.normalizeTitle(path.dirname(relativePath)),
+    getCategoryFromPath: (relativePath) => normalizeTitle(path.dirname(relativePath)),
     // Rename icons
     iconRename: (name) => {
       // Remove prefixes and clean up
@@ -156,7 +159,7 @@ const sources = [
     name: 'Microsoft Fabric',
     path: path.join(tempDir, 'fabric-icons'),
     getCategoryFromPath: (relativePath) => null,
-    iconRename: (name) => support.normalizeTitle(name),
+    iconRename: (name) => normalizeTitle(name),
   },
   {
     name: 'Microsoft 365',
@@ -170,13 +173,13 @@ const sources = [
     name: 'Microsoft Dynamics 365',
     path: path.join(tempDir, 'd365-icons/Dynamics_365_Icons_scalable'),
     getCategoryFromPath: (relativePath) => null,
-    iconRename: (name) => support.normalizeTitle(name),
+    iconRename: (name) => normalizeTitle(name),
   },
   {
     name: 'Microsoft Power Platform',
     path: path.join(tempDir, 'powerplatform-icons/Power_Platform_scalable'),
     getCategoryFromPath: (relativePath) => null,
-    iconRename: (name) => support.normalizeTitle(name),
+    iconRename: (name) => normalizeTitle(name),
   },
   {
     name: 'CNCF Kubernetes',
@@ -218,7 +221,7 @@ const sources = [
     },
     categoryRename: (category) => {
       if (!category) return null;
-      return support.normalizeTitle(category);
+      return normalizeTitle(category);
     },
     iconRename: (name) => {
       return name.replace(/(\s(512|rgb|color))*/g, '').trim();
@@ -320,7 +323,6 @@ fs.writeFileSync(iconsDataPath, iconsDataJs);
 console.log(`  Created: ${iconsDataPath}`);
 
 // Generate hash for cache busting
-const crypto = require('crypto');
 const hash = crypto.createHash('md5').update(iconsDataJs).digest('hex').substring(0, 8);
 const iconsDataHashPath = path.join(templatesDir, 'icons-data.hash');
 fs.writeFileSync(iconsDataHashPath, hash);

@@ -149,9 +149,9 @@ function renderIcons(query = '') {
     const hint = document.getElementById('performance-hint');
     if (hint) {
       if (!query && totalShown >= MAX_INITIAL_ICONS) {
-        hint.style.display = 'block';
+        hint.classList.add('show');
       } else {
-        hint.style.display = 'none';
+        hint.classList.remove('show');
       }
     }
   }, 150);

@@ -18,7 +18,7 @@
           />
         </div>
         <div class="toolbar">
-          <div class="size-control">
+          <div class="toolbar-left">
             <label for="icon-size">Size:</label>
             <input
               type="number"
@@ -30,21 +30,21 @@
             />
             <span class="size-unit"><!-- SIZE_UNIT_PLACEHOLDER --></span>
           </div>
-          <div class="size-presets">
+          <div class="toolbar-right">
             <button class="size-preset-btn" data-size="32">32</button>
             <button class="size-preset-btn" data-size="64">64</button>
             <button class="size-preset-btn" data-size="128">128</button>
             <button class="size-preset-btn" data-size="256">256</button>
           </div>
         </div>
-        <div id="performance-hint" class="performance-hint" style="display: none;">
-          ⚠️ Showing limited icons for performance. Use search to narrow down results.
-        </div>
       </header>
 
       <main class="app-main">
         <div id="icons-container" class="icons-list">
           <div class="loading">Loading icons...</div>
+        </div>
+        <div id="performance-hint" class="performance-hint">
+          ⚠️ Showing limited icons for performance. Use search to narrow down results.
         </div>
       </main>
     </div>
