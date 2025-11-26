@@ -41,6 +41,13 @@ const INITIALISMS = new Map([
   ["ssl", "SSL"],
   ["tls", "TLS"],
   ["cdn", "CDN"],
+  ["vpn", "VPN"],
+  ["wan", "WAN"],
+  ["5g", "5G"],
+
+  ["saas", "SaaS"],
+  ["paas", "PaaS"],
+  ["iaas", "IaaS"],
 
   ["erp", "ERP"],
   ["hr", "HR"],

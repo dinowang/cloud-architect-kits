@@ -1,0 +1,17 @@
+{
+  "name": "cloudarchitect-postbuild",
+  "version": "1.0.0",
+  "description": "Post-build aggregation for Cloud Architect Kits",
+  "main": "build.js",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "keywords": [
+    "postbuild",
+    "aggregation",
+    "cloud",
+    "architecture"
+  ],
+  "author": "",
+  "license": "ISC"
+}

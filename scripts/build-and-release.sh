@@ -120,8 +120,14 @@ fi
 npm run package
 echo ""
 
-# Step 8: Package to dist
-echo "==> Step 8: Packaging to dist..."
+# Step 8: Build postbuild aggregation
+echo "==> Step 8: Building postbuild aggregation..."
+cd "$PROJECT_ROOT/src/postbuild"
+npm run build
+echo ""
+
+# Step 9: Package to dist
+echo "==> Step 9: Packaging to dist..."
 rm -rf "$DIST_DIR"
 mkdir -p "$DIST_DIR"
 
