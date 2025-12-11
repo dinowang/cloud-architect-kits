@@ -18,24 +18,33 @@ const plugins = [
     name: 'figma',
     displayName: 'Figma Plugin',
     sourcePath: path.join(rootDir, 'src/figma/plugin/out'),
+    links: [
+      { "name": "Preview", "path": "figma/ui.html" }
+    ],
     description: 'Cloud Architect Kits plugin for Figma design tool'
   },
   {
     name: 'powerpoint',
     displayName: 'PowerPoint Add-in',
     sourcePath: path.join(rootDir, 'src/powerpoint/add-in/out'),
+    links: [
+      { "name": "Preview", "path": "powerpoint/taskpane.html" },
+      { "name": "manifest.xml", "path": "powerpoint/manifest.xml" }
+    ],
     description: 'Cloud Architect Kits add-in for Microsoft PowerPoint'
   },
   {
     name: 'google-slides',
     displayName: 'Google Slides Add-on',
     sourcePath: path.join(rootDir, 'src/google-slides/addon/out'),
+    links: null,
     description: 'Cloud Architect Kits add-on for Google Slides'
   },
   {
     name: 'drawio',
     displayName: 'Draw.io Icon Library',
     sourcePath: path.join(rootDir, 'src/drawio/iconlib/out'),
+    links: null,
     description: 'Cloud Architect Kits icon libraries for Draw.io'
   }
 ];
@@ -236,7 +245,9 @@ const indexHtml = `<!DOCTYPE html>
           <h2>${plugin.displayName}</h2>
           <p>${plugin.description}</p>
           <div class="plugin-links">
-            <a href="${plugin.name}/" class="btn btn-primary">Open</a>
+            ${(plugin.links || []).map(link => `
+              <a href="${link.path}" class="btn btn-secondary" target="_blank">${link.name}</a>
+            `).join('')}
             <a href="https://github.com/dinowang/cloud-architect-kits/tree/main/src/${plugin.name}" class="btn btn-secondary" target="_blank">Source</a>
           </div>
         </div>
