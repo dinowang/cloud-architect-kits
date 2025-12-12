@@ -255,15 +255,6 @@ const indexHtml = `<!DOCTYPE html>
       </div>
       
       <div class="intro">
-        <h3 style="margin-bottom: 20px;">Project</h3>
-        <p>
-          <a href="https://github.com/dinowang/cloud-architect-kits" target="_blank">Repostiory</a> 
-          |
-          <a href="https://github.com/dinowang/cloud-architect-kits/releases" target="_blank">Releases</a>
-        </p>
-      </div>
-            
-      <div class="intro">
         <h3 style="margin-bottom: 20px;">Icon Sources</h3>
         <p>Our collection includes icons from AWS, Azure, Google Cloud, Microsoft 365, Kubernetes, and more.</p>
         <p>Total: <strong>4600+</strong> cloud architecture icons</p>
@@ -285,6 +276,17 @@ const indexHtml = `<!DOCTYPE html>
 
 fs.writeFileSync(path.join(outDir, 'index.html'), indexHtml);
 console.log('✓ Generated: index.html');
+
+// Update hostname for PowerPoint add-in's manifest.xml
+const pptManifestPath = path.join(outDir, 'powerpoint', 'manifest.xml');
+if (fs.existsSync(pptManifestPath)) {
+  let manifestContent = fs.readFileSync(pptManifestPath, 'utf-8');
+  manifestContent = manifestContent.replace(/https?:\/\/localhost:3000/g, 'https://dinowang.github.io/cloud-architect-kits/powerpoint');
+  fs.writeFileSync(pptManifestPath, manifestContent);
+  console.log('✓ Updated: powerpoint/manifest.xml');
+} else {
+  console.warn('⚠ PowerPoint manifest.xml not found for hostname update.');
+}
 
 // Copy assets if exist
 const assetsSource = path.join(__dirname, 'assets');
