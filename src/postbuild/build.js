@@ -34,6 +34,13 @@ const plugins = [
     description: 'Cloud Architect Kits add-in for Microsoft PowerPoint'
   },
   {
+    name: 'vscode',
+    displayName: 'VS Code Extension',
+    sourcePath: path.join(rootDir, 'src/vscode/extension/out'),
+    links: null,
+    description: 'Cloud Architect Kits extension for Visual Studio Code'
+  },
+  {
     name: 'google-slides',
     displayName: 'Google Slides Add-on',
     sourcePath: path.join(rootDir, 'src/google-slides/addon/out'),
