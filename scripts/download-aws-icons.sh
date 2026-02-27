@@ -27,7 +27,7 @@ PAGE_CONTENT=$(curl -sL "$PAGE_URL")
 
 # Extract the Asset Package ZIP URL
 echo "🔍 Looking for Asset Package ZIP..."
-ZIP_URL=$(echo "$PAGE_CONTENT" | grep -oE 'https://d1\.awsstatic\.com/[^"]*architecture-icons/Asset-Package_[^"]*\.zip' | head -n 1)
+ZIP_URL=$(echo "$PAGE_CONTENT" | grep -oE 'https://d1\.awsstatic\.com/[^"]*architecture-icons/Icon-package_[^"]*\.zip' | head -n 1)
 
 if [ -z "$ZIP_URL" ]; then
   echo "❌ Error: Could not find Asset Package ZIP URL"
