@@ -41,11 +41,14 @@ if [ "$DOWNLOAD_NEEDED" = true ]; then
         rm -rf "$FABRIC_ICONS_DIR"
     fi
     
-    echo "==> Extracting /icons/package/dist/svg/ to $FABRIC_ICONS_DIR..."
-    unzip -q "$ZIP_FILE" "icons/package/dist/svg/*" -d "$TEMP_DIR"
+    # Detect the version-prefixed root directory inside the ZIP (e.g. "v6.1.0/")
+    ZIP_ROOT=$(unzip -l "$ZIP_FILE" | awk '{print $4}' | grep "package/dist/svg/" | head -1 | sed 's|/package/dist/svg/.*||')
+    echo "==> Detected ZIP root: $ZIP_ROOT"
+    echo "==> Extracting ${ZIP_ROOT}/package/dist/svg/ to $FABRIC_ICONS_DIR..."
+    unzip -q "$ZIP_FILE" "${ZIP_ROOT}/package/dist/svg/*" -d "$TEMP_DIR"
     mkdir -p "$FABRIC_ICONS_DIR"
-    mv "$TEMP_DIR/icons/package/dist/svg/"* "$FABRIC_ICONS_DIR/"
-    rm -rf "$TEMP_DIR/icons"
+    mv "$TEMP_DIR/${ZIP_ROOT}/package/dist/svg/"* "$FABRIC_ICONS_DIR/"
+    rm -rf "$TEMP_DIR/${ZIP_ROOT}"
     
     echo "==> Filtering to keep only *_48_color.svg files..."
     
