@@ -22,7 +22,7 @@ git remote add origin "$REPO_URL"
 git config core.sparseCheckout true
 echo "$ICONS_PATH/*" > .git/info/sparse-checkout
 
-git pull --depth=1 origin master
+git pull --depth=1 origin main
 
 cd -
 
