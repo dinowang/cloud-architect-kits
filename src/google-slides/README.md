@@ -4,7 +4,7 @@ A Google Slides Add-on that allows you to quickly insert cloud architecture and 
 
 ## Features
 
-- 🔍 **Search through 4,637+ icons** from multiple sources
+- 🔍 **Search through 8,642+ icons** from multiple sources
 - 📐 **Flexible sizing** - Adjustable icon sizes from 16pt to 512pt
 - 🎨 **Organized by source and category** - Easy navigation
 - ⚡ **Fast keyword search** - Search by icon name, source, or category
@@ -17,19 +17,20 @@ A Google Slides Add-on that allows you to quickly insert cloud architecture and 
 
 This add-on includes icons from:
 
+- **TheSVG** (3,999 icons)
 - **Gilbarbara Logos** (1,776 icons)
 - **Microsoft 365 Icons** (963 icons)
-- **Lobe Icons** (723 icons)
+- **Lobe Icons** (727 icons)
 - **Azure Architecture Icons** (705 icons)
 - **AWS Architecture Icons** (321 icons)
 - **GCP Icons** (45 icons)
 - **Kubernetes Icons** (39 icons)
 - **Dynamics 365 Icons** (38 icons)
-- **Microsoft Fabric Icons** (11 icons)
+- **Microsoft Fabric Icons** (13 icons)
 - **Power Platform Icons** (9 icons)
 - **Microsoft Entra Icons** (7 icons)
 
-**Total: 4,637 icons**
+**Total: 8,642 icons**
 
 ## Prerequisites
 

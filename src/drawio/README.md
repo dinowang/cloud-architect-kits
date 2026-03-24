@@ -4,7 +4,7 @@ Custom icon libraries for Draw.io (diagrams.net) containing cloud architecture a
 
 ## Features
 
-- 📚 4,637+ icons organized by source
+- 📚 8,642+ icons organized by source
 - 🔍 Separate libraries for each icon source
 - 📦 Combined library with all icons
 - ⚡ Standard Draw.io XML library format
@@ -73,18 +73,19 @@ Libraries are generated for each icon source:
 
 | Library | Icons | Description |
 |---------|-------|-------------|
+| `cloud-architect-thesvg.xml` | 3,999 | TheSVG Technology Icons |
 | `cloud-architect-gilbarbara-logos.xml` | 1,776 | Gilbarbara Technology Logos |
 | `cloud-architect-microsoft-365.xml` | 963 | Microsoft 365 Icons |
-| `cloud-architect-lobe-icons.xml` | 723 | Lobe Icons |
+| `cloud-architect-lobe-icons.xml` | 727 | Lobe Icons |
 | `cloud-architect-azure.xml` | 705 | Azure Architecture Icons |
 | `cloud-architect-aws.xml` | 321 | AWS Architecture Icons |
 | `cloud-architect-gcp.xml` | 45 | Google Cloud Platform Icons |
 | `cloud-architect-kubernetes.xml` | 39 | Kubernetes Icons |
 | `cloud-architect-dynamics-365.xml` | 38 | Dynamics 365 Icons |
-| `cloud-architect-fabric.xml` | 11 | Microsoft Fabric Icons |
+| `cloud-architect-fabric.xml` | 13 | Microsoft Fabric Icons |
 | `cloud-architect-power-platform.xml` | 9 | Power Platform Icons |
 | `cloud-architect-microsoft-entra.xml` | 7 | Microsoft Entra Icons |
-| `cloud-architect-all.xml` | **4,637** | **All icons (combined)** |
+| `cloud-architect-all.xml` | **8,642** | **All icons (combined)** |
 
 ## Usage in Draw.io
 
@@ -156,19 +157,20 @@ npm run validate   # Validate generated libraries
 
 This library uses icons from:
 
+- **TheSVG**: Technology and brand SVG icons (3,999)
 - **Gilbarbara Logos**: Technology company logos (1,776)
 - **Microsoft 365**: Official Microsoft 365 Icons (963)
-- **Lobe Icons**: Modern icon set (723)
+- **Lobe Icons**: Modern icon set (727)
 - **Azure**: Official Azure Architecture Icons (705)
 - **AWS**: Official AWS Architecture Icons (321)
 - **GCP**: Official Google Cloud Platform Icons (45)
 - **Kubernetes**: Official Kubernetes Icons (39)
 - **Dynamics 365**: Official Dynamics 365 Icons (38)
-- **Microsoft Fabric**: Official Microsoft Fabric Icons (11)
+- **Microsoft Fabric**: Official Microsoft Fabric Icons (13)
 - **Power Platform**: Official Power Platform Icons (9)
 - **Microsoft Entra**: Official Microsoft Entra Icons (7)
 
-**Total: 4,637 icons**
+**Total: 8,642 icons**
 
 ## Performance Notes
 

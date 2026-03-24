@@ -204,6 +204,12 @@ const sources = [
     getCategoryFromPath: (relativePath) => null,
   },
   {
+    name: 'TheSVG',
+    path: path.join(tempDir, 'thesvg-icons'),
+    getCategoryFromPath: (relativePath) => null,
+    iconRename: (name) => normalizeTitle(name),
+  },
+  {
     name: 'Google Cloud Platform',
     path: path.join(tempDir, 'gcp-icons'),
     getCategoryFromPath: (relativePath) => {

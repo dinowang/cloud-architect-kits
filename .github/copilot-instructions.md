@@ -2,10 +2,10 @@
 
 ## Architecture
 
-This is a multi-plugin project that delivers 4,637+ cloud architecture icons to 5 platforms. All plugins share a **single prebuild pipeline** that processes icon sources into reusable templates.
+This is a multi-plugin project that delivers 8,642+ cloud architecture icons to 5 platforms. All plugins share a **single prebuild pipeline** that processes icon sources into reusable templates.
 
 ```
-Icon Sources (11 packs in temp/)
+Icon Sources (12 packs in temp/)
         │
         ▼
   src/prebuild/process-icons.js    ← Normalizes SVGs, generates icons-data.js (~28 MB base64)

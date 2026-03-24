@@ -302,7 +302,7 @@ After build, verify these files exist:
 
 ### For Large Icon Libraries
 
-The add-in includes 4,637+ icons, which results in large files:
+The add-in includes 8,642+ icons, which results in large files:
 
 1. **Use production build:** `taskpane.html` has all icons embedded
 2. **Lazy loading:** Icons are loaded on-demand during scrolling

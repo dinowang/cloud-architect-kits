@@ -110,7 +110,7 @@ You'll be prompted to choose:
 
 ## Features
 
-- **4,637+ Icons** from 11 sources
+- **8,642+ Icons** from 12 sources
 - **Sidebar View** with visual icon browser
 - **Smart Search** with real-time filtering
 - **Category Filtering** by source and service

@@ -61,12 +61,12 @@ echo "--- Downloading Lobe icons..."
 "$SCRIPT_DIR/download-lobe-icons.sh"
 echo ""
 
-echo "--- Downloading Fabric icons..."
-"$SCRIPT_DIR/download-fabric-icons.sh"
-echo ""
-
 echo "--- Downloading GCP icons..."
 "$SCRIPT_DIR/download-gcp-icons.sh"
+echo ""
+
+echo "--- Downloading TheSVG icons..."
+"$SCRIPT_DIR/download-thesvg-icons.sh"
 echo ""
 
 # Step 2: Prebuild icons and templates

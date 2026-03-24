@@ -79,7 +79,7 @@ cp icons.json ../google-slides/addon/icons.json
 
 ## Output
 
-- `icons/` - ~4,323 processed SVG files
+- `icons/` - ~8,642 processed SVG files
 - `icons.json` - Icon metadata (~550KB)
   ```json
   [

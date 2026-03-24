@@ -111,15 +111,16 @@ For detailed instructions, see [src/google-slides/INSTALL.md](src/google-slides/
 
 ### Available Libraries
 
+- `cloud-architect-thesvg.xml` (3,999 icons)
 - `cloud-architect-gilbarbara.xml` (1,776 icons)
 - `cloud-architect-microsoft-365.xml` (963 icons)
-- `cloud-architect-lobe-icons.xml` (723 icons)
+- `cloud-architect-lobe-icons.xml` (727 icons)
 - `cloud-architect-azure.xml` (705 icons)
 - `cloud-architect-aws.xml` (321 icons)
 - `cloud-architect-gcp.xml` (45 icons)
 - `cloud-architect-kubernetes.xml` (39 icons)
 - `cloud-architect-dynamics-365.xml` (38 icons)
-- `cloud-architect-fabric.xml` (11 icons)
+- `cloud-architect-fabric.xml` (13 icons)
 - `cloud-architect-power-platform.xml` (9 icons)
 - `cloud-architect-entra.xml` (7 icons)
 

@@ -4,7 +4,7 @@ A PowerPoint Add-in that allows you to quickly insert cloud architecture and tec
 
 ## Features
 
-- 🔍 Search through 4,637+ icons from multiple sources
+- 🔍 Search through 8,642+ icons from multiple sources
 - 📐 Customizable icon size (default 64px, maintains aspect ratio)
 - 🎨 Organized by source and category
 - ⚡ Fast keyword search by icon name, source, or category
@@ -245,19 +245,20 @@ Contains the PowerPoint Add-in source code:
 
 This add-in uses the same icon library as the Figma Cloud Architect plugin:
 
+- TheSVG (3,999)
 - Gilbarbara Logos (1,776)
 - Microsoft 365 Icons (963)
-- Lobe Icons (723)
+- Lobe Icons (727)
 - Azure Architecture Icons (705)
 - AWS Architecture Icons (321)
 - GCP Icons (45)
 - Kubernetes Icons (39)
 - Dynamics 365 Icons (38)
-- Microsoft Fabric Icons (11)
+- Microsoft Fabric Icons (13)
 - Power Platform Icons (9)
 - Microsoft Entra Icons (7)
 
-**Total: 4,637 icons**
+**Total: 8,642 icons**
 
 ## Configuration
 
@@ -297,7 +298,7 @@ Edit `add-in/staticwebapp.config.json` to customize:
 - **Sticky Headers**: Source headers stay visible while scrolling
 - **Icon Count Display**: Real-time filtered/total count per source
 - **Auto-Scroll**: Search results automatically scroll to top
-- **Lazy Loading**: Optimized rendering for 4,637+ icons
+- **Lazy Loading**: Optimized rendering for 8,642+ icons
 
 ## Troubleshooting
 

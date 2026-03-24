@@ -61,6 +61,7 @@ jobs:
           ./scripts/download-gilbarbara-icons.sh
           ./scripts/download-lobe-icons.sh
           ./scripts/download-gcp-icons.sh
+          ./scripts/download-thesvg-icons.sh
 
       - name: Prebuild icons
         working-directory: src/prebuild

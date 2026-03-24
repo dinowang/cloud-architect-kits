@@ -88,7 +88,7 @@
 
 ## Features
 
-- **4,637+ Icons** from 11 sources
+- **8,642+ Icons** from 12 sources
 - **Visual Browser** with 48x48 previews
 - **Smart Search** with real-time filtering
 - **Category Filtering** by source and service
