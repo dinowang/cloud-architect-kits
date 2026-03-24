@@ -187,7 +187,7 @@ const sources = [
     getCategoryFromPath: (relativePath) => null,
   },
   {
-    name: 'GitHub Gilbarbara',
+    name: 'Gilbarbara',
     path: path.join(tempDir, 'gilbarbara-icons/logos'),
     getCategoryFromPath: (relativePath) => null,
     pathAndFileFilter: (relativePath, fileName) => {
@@ -199,7 +199,7 @@ const sources = [
     },
   },
   {
-    name: 'GitHub Lobe-icons',
+    name: 'Lobe-icons',
     path: path.join(tempDir, 'lobe-icons/packages/static-svg/icons/'),
     getCategoryFromPath: (relativePath) => null,
   },
