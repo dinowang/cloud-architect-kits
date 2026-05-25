@@ -85,6 +85,8 @@ function normalizeSvgSize(svgContent) {
 const sources = [
   {
     name: 'AWS',
+    url: 'https://aws.amazon.com/architecture/icons/',
+    license: 'AWS Terms',
     path: path.join(tempDir, 'aws-icons'),
     getCategoryFromPath: (relativePath) => {
       const parts = relativePath.split(path.sep);
@@ -140,11 +142,15 @@ const sources = [
   },
   {
     name: 'Microsoft Azure',
+    url: 'https://learn.microsoft.com/en-us/azure/architecture/icons/',
+    license: 'Microsoft Terms',
     path: path.join(tempDir, 'azure-icons/Azure_Public_Service_Icons/Icons'),
     getCategoryFromPath: (relativePath) => normalizeTitle(path.dirname(relativePath)),
   },
   {
     name: 'Microsoft Entra',
+    url: 'https://learn.microsoft.com/en-us/entra/architecture/architecture-icons',
+    license: 'Microsoft Terms',
     path: path.join(tempDir, 'entra-icons/Microsoft Entra architecture icons - Oct 2023/Microsoft Entra color icons SVG'),
     getCategoryFromPath: (relativePath) => normalizeTitle(path.dirname(relativePath)),
     // Rename icons
@@ -157,12 +163,16 @@ const sources = [
   },
   {
     name: 'Microsoft Fabric',
+    url: 'https://github.com/microsoft/fabric-samples',
+    license: 'MIT',
     path: path.join(tempDir, 'fabric-icons'),
     getCategoryFromPath: (relativePath) => null,
     iconRename: (name) => normalizeTitle(name),
   },
   {
     name: 'Microsoft 365',
+    url: 'https://learn.microsoft.com/en-us/microsoft-365/solutions/architecture-icons-templates',
+    license: 'Microsoft Terms',
     path: path.join(tempDir, 'm365-icons'),
     getCategoryFromPath: (relativePath) => {
       const parts = relativePath.split(path.sep);
@@ -171,23 +181,31 @@ const sources = [
   },
   {
     name: 'Microsoft Dynamics 365',
+    url: 'https://learn.microsoft.com/en-us/dynamics365/get-started/icons',
+    license: 'Microsoft Terms',
     path: path.join(tempDir, 'd365-icons/Dynamics_365_Icons_scalable'),
     getCategoryFromPath: (relativePath) => null,
     iconRename: (name) => normalizeTitle(name),
   },
   {
     name: 'Microsoft Power Platform',
+    url: 'https://learn.microsoft.com/en-us/power-platform/guidance/icons',
+    license: 'Microsoft Terms',
     path: path.join(tempDir, 'powerplatform-icons/Power_Platform_scalable'),
     getCategoryFromPath: (relativePath) => null,
     iconRename: (name) => normalizeTitle(name),
   },
   {
     name: 'CNCF Kubernetes',
+    url: 'https://github.com/kubernetes/community',
+    license: 'CC BY 4.0',
     path: path.join(tempDir, 'kubernetes-icons'),
     getCategoryFromPath: (relativePath) => null,
   },
   {
     name: 'Gilbarbara',
+    url: 'https://github.com/gilbarbara/logos',
+    license: 'CC0 1.0',
     path: path.join(tempDir, 'gilbarbara-icons/logos'),
     getCategoryFromPath: (relativePath) => null,
     pathAndFileFilter: (relativePath, fileName) => {
@@ -200,17 +218,23 @@ const sources = [
   },
   {
     name: 'Lobe-icons',
+    url: 'https://github.com/lobehub/lobe-icons',
+    license: 'MIT',
     path: path.join(tempDir, 'lobe-icons/packages/static-svg/icons/'),
     getCategoryFromPath: (relativePath) => null,
   },
   {
     name: 'TheSVG',
+    url: 'https://github.com/glincker/thesvg',
+    license: 'MIT',
     path: path.join(tempDir, 'thesvg-icons'),
     getCategoryFromPath: (relativePath) => null,
     iconRename: (name) => normalizeTitle(name),
   },
   {
     name: 'Google Cloud Platform',
+    url: 'https://cloud.google.com/icons',
+    license: 'Google Terms',
     path: path.join(tempDir, 'gcp-icons'),
     getCategoryFromPath: (relativePath) => {
       const parts = relativePath.split(path.sep);
@@ -287,6 +311,22 @@ sources.forEach(source => {
 fs.writeFileSync(outputJson, JSON.stringify(icons, null, 2));
 console.log(`\nTotal processed: ${icons.length} icons`);
 
+// Generate icons summary JSON
+const sourceCounts = {};
+icons.forEach(icon => {
+  sourceCounts[icon.source] = (sourceCounts[icon.source] || 0) + 1;
+});
+const summaryData = {
+  total: icons.length,
+  sources: Object.entries(sourceCounts)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => ({ name, count })),
+  generatedAt: new Date().toISOString(),
+};
+const summaryPath = path.join(rootDir, 'icons-summary.json');
+fs.writeFileSync(summaryPath, JSON.stringify(summaryData, null, 2));
+console.log(`Generated: icons-summary.json (${summaryData.total} icons, ${summaryData.sources.length} sources)`);
+
 // Generate icons data JavaScript file with embedded SVG data
 console.log('\nGenerating icons data JavaScript files...');
 
@@ -320,8 +360,17 @@ existingFiles.forEach(file => {
   }
 });
 
+// Build source metadata map
+const sourceMeta = {};
+sources.forEach(source => {
+  sourceMeta[source.name] = {
+    url: source.url || null,
+    license: source.license || null,
+  };
+});
+
 // Generate minified icons-data.js file with hash comment
-const iconsDataJsContent = `window.iconsData=${JSON.stringify(iconsWithSvg)};`;
+const iconsDataJsContent = `window.iconsData=${JSON.stringify(iconsWithSvg)};window.sourcesMeta=${JSON.stringify(sourceMeta)};`;
 const hash = crypto.createHash('md5').update(iconsDataJsContent).digest('hex').substring(0, 8);
 const iconsDataJs = `// Hash: ${hash}\n${iconsDataJsContent}`;
 

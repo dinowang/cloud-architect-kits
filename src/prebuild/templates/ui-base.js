@@ -5,6 +5,7 @@ let sourceIconCounts = {};
 
 function initializeIcons() {
   allIcons = window.iconsData || [];
+  const sourcesMeta = window.sourcesMeta || {};
   
   // Group icons by source, then by category
   organizedIcons = {};
@@ -23,6 +24,9 @@ function initializeIcons() {
     organizedIcons[icon.source][category].push(icon);
     sourceIconCounts[icon.source]++;
   });
+  
+  // Store sourcesMeta globally for renderIcons
+  window._sourcesMeta = sourcesMeta;
   
   renderIcons();
 }
@@ -49,7 +53,26 @@ function renderIcons(query = '') {
       
       const sourceTitle = document.createElement('div');
       sourceTitle.className = 'source-header-title';
-      sourceTitle.textContent = source;
+      
+      const meta = (window._sourcesMeta || {})[source];
+      if (meta && meta.url) {
+        const link = document.createElement('a');
+        link.href = meta.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = source;
+        link.className = 'source-link';
+        sourceTitle.appendChild(link);
+      } else {
+        sourceTitle.textContent = source;
+      }
+      
+      if (meta && meta.license) {
+        const license = document.createElement('span');
+        license.className = 'source-license';
+        license.textContent = meta.license;
+        sourceTitle.appendChild(license);
+      }
       
       const sourceCount = document.createElement('span');
       sourceCount.className = 'source-header-count';

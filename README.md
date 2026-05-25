@@ -1,6 +1,8 @@
 # Cloud Architect Kits
 
-A comprehensive toolkit bringing **8,642+ professional cloud architecture and technology icons** directly into your favorite design and presentation tools.
+![Icons](https://img.shields.io/endpoint?url=https%3A%2F%2Fdinowang.github.io%2Fcloud-architect-kits%2Fbadge.json)
+
+A comprehensive toolkit bringing professional cloud architecture and technology icons directly into your favorite design and presentation tools.
 
 ## 🎯 What's Included
 
@@ -14,22 +16,24 @@ A comprehensive toolkit bringing **8,642+ professional cloud architecture and te
 
 ## ✨ Icon Library
 
-### 8,642+ Professional Icons From:
+<!-- ICON_COUNTS_START -->
+### 9,242 Professional Icons From:
 
 | Source | Count | Description |
-|--------|-------|-------------|
-| **TheSVG** | 3,999 | Technology and brand SVG icons |
-| **Gilbarbara Logos** | 1,776 | Technology company logos |
+| :----- | ----: | :---------- |
+| **TheSVG** | 4,456 | Technology and brand SVG icons |
+| **Gilbarbara Logos** | 1,800 | Technology company logos |
 | **Microsoft 365** | 963 | Office and productivity icons |
-| **Lobe Icons** | 727 | Machine learning icons |
+| **Lobe Icons** | 850 | Machine learning icons |
 | **Azure Architecture** | 705 | Official Azure service icons |
-| **AWS Architecture** | 321 | Official AWS service icons |
+| **AWS Architecture** | 317 | Official AWS service icons |
 | **GCP (Google Cloud Platform)** | 45 | Official GCP service icons |
 | **Kubernetes** | 39 | Container orchestration icons |
 | **Dynamics 365** | 38 | Business application icons |
 | **Microsoft Fabric** | 13 | Data analytics and BI icons |
 | **Power Platform** | 9 | Low-code platform icons |
 | **Microsoft Entra** | 7 | Identity and access icons |
+<!-- ICON_COUNTS_END -->
 
 ## 🚀 Quick Start
 

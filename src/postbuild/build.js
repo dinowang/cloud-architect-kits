@@ -6,6 +6,17 @@ console.log('Building postbuild aggregation...');
 const rootDir = path.resolve(__dirname, '../..');
 const outDir = path.resolve(__dirname, 'out');
 
+// Read icon count summary from prebuild
+let iconTotal = '9000+';
+const summaryPath = path.join(rootDir, 'src/prebuild/icons-summary.json');
+if (fs.existsSync(summaryPath)) {
+  const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf-8'));
+  iconTotal = summary.total.toLocaleString();
+  console.log(`Using icon summary: ${iconTotal} icons from ${summary.sources.length} sources`);
+} else {
+  console.warn('Warning: icons-summary.json not found, using fallback count');
+}
+
 // Create output directory
 if (fs.existsSync(outDir)) {
   fs.rmSync(outDir, { recursive: true });
@@ -264,7 +275,7 @@ const indexHtml = `<!DOCTYPE html>
       <div class="intro">
         <h3 style="margin-bottom: 20px;">Icon Sources</h3>
         <p>Our collection includes icons from AWS, Azure, Google Cloud, Microsoft 365, Kubernetes, and more.</p>
-        <p>Total: <strong>4600+</strong> cloud architecture icons</p>
+        <p>Total: <strong>${iconTotal}</strong> cloud architecture icons</p>
       </div>
     </main>
     
@@ -283,6 +294,16 @@ const indexHtml = `<!DOCTYPE html>
 
 fs.writeFileSync(path.join(outDir, 'index.html'), indexHtml);
 console.log('✓ Generated: index.html');
+
+// Generate shields.io endpoint badge
+const badgeData = {
+  schemaVersion: 1,
+  label: 'icons',
+  message: iconTotal,
+  color: '6366f1',
+};
+fs.writeFileSync(path.join(outDir, 'badge.json'), JSON.stringify(badgeData, null, 2));
+console.log('✓ Generated: badge.json');
 
 // Update hostname for PowerPoint add-in's manifest.xml
 const pptManifestPath = path.join(outDir, 'powerpoint', 'manifest.xml');

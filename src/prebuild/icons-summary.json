@@ -1,0 +1,54 @@
+{
+  "total": 9242,
+  "sources": [
+    {
+      "name": "TheSVG",
+      "count": 4456
+    },
+    {
+      "name": "Gilbarbara",
+      "count": 1800
+    },
+    {
+      "name": "Microsoft 365",
+      "count": 963
+    },
+    {
+      "name": "Lobe-icons",
+      "count": 850
+    },
+    {
+      "name": "Microsoft Azure",
+      "count": 705
+    },
+    {
+      "name": "AWS",
+      "count": 317
+    },
+    {
+      "name": "Google Cloud Platform",
+      "count": 45
+    },
+    {
+      "name": "CNCF Kubernetes",
+      "count": 39
+    },
+    {
+      "name": "Microsoft Dynamics 365",
+      "count": 38
+    },
+    {
+      "name": "Microsoft Fabric",
+      "count": 13
+    },
+    {
+      "name": "Microsoft Power Platform",
+      "count": 9
+    },
+    {
+      "name": "Microsoft Entra",
+      "count": 7
+    }
+  ],
+  "generatedAt": "2026-05-25T15:23:28.729Z"
+}
