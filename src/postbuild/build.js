@@ -305,6 +305,13 @@ const badgeData = {
 fs.writeFileSync(path.join(outDir, 'badge.json'), JSON.stringify(badgeData, null, 2));
 console.log('✓ Generated: badge.json');
 
+// Copy icons manifest for release diffing
+const iconsJsonPath = path.join(rootDir, 'src/prebuild/icons.json');
+if (fs.existsSync(iconsJsonPath)) {
+  fs.copyFileSync(iconsJsonPath, path.join(outDir, 'icons-manifest.json'));
+  console.log('✓ Copied: icons-manifest.json');
+}
+
 // Update hostname for PowerPoint add-in's manifest.xml
 const pptManifestPath = path.join(outDir, 'powerpoint', 'manifest.xml');
 if (fs.existsSync(pptManifestPath)) {

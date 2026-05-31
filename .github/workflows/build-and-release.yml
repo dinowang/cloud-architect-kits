@@ -111,6 +111,26 @@ jobs:
           npm ci
           npm run package
 
+      - name: Download previous icons manifest
+        if: steps.check_branch.outputs.is_main == 'true'
+        run: |
+          curl -fsSL https://dinowang.github.io/cloud-architect-kits/icons-manifest.json \
+            -o /tmp/prev-icons-manifest.json 2>/dev/null || {
+            echo "No previous manifest found (first release or not yet deployed)"
+          }
+
+      - name: Generate release notes
+        if: steps.check_branch.outputs.is_main == 'true'
+        run: |
+          if [ -f /tmp/prev-icons-manifest.json ]; then
+            node scripts/generate-release-notes.js \
+              --previous /tmp/prev-icons-manifest.json \
+              --output /tmp/release-notes.md
+          else
+            node scripts/generate-release-notes.js \
+              --output /tmp/release-notes.md
+          fi
+
       - name: Build postbuild aggregation
         working-directory: src/postbuild
         run: npm run build
@@ -216,24 +236,34 @@ jobs:
           publish_branch: gh-pages
           force_orphan: true
 
+      - name: Prepare release body
+        if: steps.check_branch.outputs.is_main == 'true' && steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          if [ -f /tmp/release-notes.md ]; then
+            sed "s/\${RELEASE_TAG}/${{ env.RELEASE_TAG }}/g" /tmp/release-notes.md > /tmp/release-body.md
+          else
+            cat > /tmp/release-body.md << 'EOF'
+          ## Cloud Architect Kits - Release ${{ env.RELEASE_TAG }}
+
+          ### Packages Included
+          - **Figma Plugin**: `cloud-architect-kits-figma-plugin.zip`
+          - **PowerPoint Add-in**: `cloud-architect-kits-powerpoint-addin.zip`
+          - **Google Slides Add-on**: `cloud-architect-kits-google-slides-addon.zip`
+          - **Draw.io Icon Libraries**: `cloud-architect-kits-drawio-iconlib.zip`
+          - **VSCode Extension**: `cloud-architect-kits-vscode-extension-1.0.0.vsix`
+
+          ### Installation Instructions
+          See README.md for detailed installation instructions for each platform.
+          EOF
+          fi
+
       - name: Create GitHub Release
         if: steps.check_branch.outputs.is_main == 'true' && steps.check_changes.outputs.has_changes == 'true'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Cloud Architect Kits ${{ env.RELEASE_TAG }}
-          body: |
-            ## Cloud Architect Kits - Release ${{ env.RELEASE_TAG }}
-
-            ### Packages Included
-            - **Figma Plugin**: `cloud-architect-kits-figma-plugin.zip`
-            - **PowerPoint Add-in**: `cloud-architect-kits-powerpoint-addin.zip`
-            - **Google Slides Add-on**: `cloud-architect-kits-google-slides-addon.zip`
-            - **Draw.io Icon Libraries**: `cloud-architect-kits-drawio-iconlib.zip`
-            - **VSCode Extension**: `cloud-architect-kits-vscode-extension-1.0.0.vsix`
-
-            ### Installation Instructions
-            See README.md for detailed installation instructions for each platform.
+          body_path: /tmp/release-body.md
           files: |
             dist/cloud-architect-kits-figma-plugin.zip
             dist/cloud-architect-kits-powerpoint-addin.zip
