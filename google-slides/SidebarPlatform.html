@@ -1,0 +1,23 @@
+<script>
+function handleIconClick(icon) {
+  const size = document.getElementById('icon-size').value;
+  google.script.run
+    .withSuccessHandler(() => showStatusMessage('Icon inserted!', 'success'))
+    .withFailureHandler((error) => showStatusMessage('Failed: ' + error, 'error'))
+    .insertIcon(icon, parseInt(size) || 64);
+}
+
+function showStatusMessage(message, type = 'success') {
+  const statusEl = document.getElementById('status-message');
+  if (statusEl) {
+    statusEl.textContent = message;
+    statusEl.className = 'status-message show ' + type;
+    setTimeout(() => statusEl.classList.remove('show'), 3000);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  initializeIcons();
+  setupEventListeners();
+});
+</script>
