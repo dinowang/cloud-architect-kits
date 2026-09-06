@@ -64,7 +64,7 @@ echo "   From: $ZIP_URL"
 echo "   To: $ZIP_FILE"
 echo ""
 
-curl -L --progress-bar -o "$ZIP_FILE" "$ZIP_URL"
+curl -L --retry 5 --retry-delay 3 --retry-connrefused --retry-all-errors --progress-bar -o "$ZIP_FILE" "$ZIP_URL"
 
 if [ ! -f "$ZIP_FILE" ]; then
   echo "❌ Error: Download failed"

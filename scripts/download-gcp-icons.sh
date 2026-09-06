@@ -78,7 +78,7 @@ echo "   From: $CATEGORY_URL"
 echo "   To: $CATEGORY_ZIP"
 echo ""
 
-curl -L --progress-bar -o "$CATEGORY_ZIP" "$CATEGORY_URL"
+curl -L --retry 5 --retry-delay 3 --retry-connrefused --retry-all-errors --progress-bar -o "$CATEGORY_ZIP" "$CATEGORY_URL"
 
 if [ ! -f "$CATEGORY_ZIP" ]; then
   echo "❌ Error: Category icons download failed"
@@ -95,7 +95,7 @@ echo "   From: $CORE_URL"
 echo "   To: $CORE_ZIP"
 echo ""
 
-curl -L --progress-bar -o "$CORE_ZIP" "$CORE_URL"
+curl -L --retry 5 --retry-delay 3 --retry-connrefused --retry-all-errors --progress-bar -o "$CORE_ZIP" "$CORE_URL"
 
 if [ ! -f "$CORE_ZIP" ]; then
   echo "❌ Error: Core products icons download failed"

@@ -63,7 +63,7 @@ if [ "$DOWNLOAD_NEEDED" = true ]; then
     fi
     
     echo -e "${YELLOW}Downloading...${NC}"
-    curl -L -o "$ZIP_FILE" "$PP_DOWNLOAD_URL" --progress-bar
+    curl -L --retry 5 --retry-delay 3 --retry-connrefused --retry-all-errors -o "$ZIP_FILE" "$PP_DOWNLOAD_URL" --progress-bar
     
     if [ ! -f "$ZIP_FILE" ]; then
         echo -e "${RED}✗${NC} Download failed"

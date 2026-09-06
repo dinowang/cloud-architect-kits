@@ -41,7 +41,7 @@ fi
 
 if [ "$DOWNLOAD_NEEDED" = true ]; then
     echo "==> Downloading Azure icons..."
-    curl -L -o "$ZIP_FILE" "$ZIP_URL"
+    curl -L --retry 5 --retry-delay 3 --retry-connrefused --retry-all-errors -o "$ZIP_FILE" "$ZIP_URL"
     
     if [ -d "$AZURE_ICONS_DIR" ]; then
         echo "==> Cleaning existing azure-icons directory..."
