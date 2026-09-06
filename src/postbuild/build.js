@@ -30,7 +30,8 @@ const plugins = [
     displayName: 'Figma Plugin',
     sourcePath: path.join(rootDir, 'src/figma/plugin/out'),
     links: [
-      { "name": "Preview", "path": "figma/ui.html" }
+      { "name": "Preview", "path": "figma/ui.html" },
+      { "name": "manifest.json", "path": "figma/manifest.json" }
     ],
     description: 'Cloud Architect Kits plugin for Figma design tool'
   },
