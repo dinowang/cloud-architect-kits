@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cloud Architect Kits</title>
+    <?!= include('SidebarStyle'); ?>
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="app-header">
+        <div class="search-box">
+          <input
+            type="text"
+            id="search"
+            placeholder="Search cloud architect icons..."
+            autocomplete="off"
+          />
+        </div>
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <label for="icon-size">Size:</label>
+            <input
+              type="number"
+              id="icon-size"
+              value="64"
+              min="16"
+              max="512"
+              step="16"
+            />
+            <span class="size-unit">pt</span>
+          </div>
+          <div class="toolbar-right">
+            <button class="size-preset-btn" data-size="32">32</button>
+            <button class="size-preset-btn" data-size="64">64</button>
+            <button class="size-preset-btn" data-size="128">128</button>
+            <button class="size-preset-btn" data-size="256">256</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <div id="icons-container" class="icons-list">
+          <div class="loading">Loading icons...</div>
+        </div>
+        <div id="performance-hint" class="performance-hint">
+          ⚠️ Showing limited icons for performance. Use search to narrow down results.
+        </div>
+      </main>
+    </div>
+
+    <div id="status-message" class="status-message"></div>
+
+    <?!= include('SidebarData'); ?>
+  <?!= include('SidebarScript'); ?>
+  <?!= include('SidebarPlatform'); ?>
+  </body>
+</html>
