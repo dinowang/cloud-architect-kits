@@ -17,14 +17,14 @@ A comprehensive toolkit bringing professional cloud architecture and technology 
 ## ✨ Icon Library
 
 <!-- ICON_COUNTS_START -->
-### 11,031 Professional Icons From:
+### 11,101 Professional Icons From:
 
 | Source | Count | Description |
 | :----- | ----: | :---------- |
-| **TheSVG** | 6,009 | Technology and brand SVG icons |
-| **Gilbarbara Logos** | 1,927 | Technology company logos |
+| **TheSVG** | 6,023 | Technology and brand SVG icons |
+| **Gilbarbara Logos** | 1,955 | Technology company logos |
+| **Lobe Icons** | 978 | Machine learning icons |
 | **Microsoft 365** | 963 | Office and productivity icons |
-| **Lobe Icons** | 950 | Machine learning icons |
 | **Azure Architecture** | 714 | Official Azure service icons |
 | **AWS Architecture** | 317 | Official AWS service icons |
 | **GCP (Google Cloud Platform)** | 45 | Official GCP service icons |
